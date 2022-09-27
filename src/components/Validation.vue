@@ -78,7 +78,7 @@ export default {
       return check;
     },
     getIllustration: function () {
-      return this.$config.STATIC_PATH + "assets/gvl_summary_illustration.png"
+      return this.$config.STATIC_PATH + "assets/graphsimviz_summary_illustration.png"
     },
 
 
