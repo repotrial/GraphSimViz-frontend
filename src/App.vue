@@ -58,3 +58,8 @@ export default {
 
 };
 </script>
+<style>
+:root{
+  --drgstn-height: 500px
+}
+</style>

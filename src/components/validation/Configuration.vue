@@ -73,8 +73,9 @@
               <v-row justify="center" justify-lg="start">
                 <v-col cols="12" md="6" lg="12" class="flex_content_center">
                   <v-select label="Network type" :items="networkTypes"
-                            v-model="networkType"
-                            style="max-width: 210px; min-width: 210px" outlined dense filled hide-details @change="scrollDown(true)">
+                            v-model="networkType" append-icon="mdi-menu-down"
+                            style="max-width: 210px; min-width: 210px" outlined dense filled hide-details
+                            @change="scrollDown(true)">
                     <template v-slot:append-outer>
                       <v-tooltip right>
                         <template v-slot:activator="{on, attrs}">
@@ -109,7 +110,9 @@
                 <v-row style="margin: 8px" justify="center">
                   <v-col>
                     <v-select label="Network 1" :items="networks[networkType]" v-model="network1"
-                              style="max-width: 210px; min-width: 210px" outlined dense filled hide-details @change="scrollDown(network1 && network2)">
+                              append-icon="mdi-menu-down"
+                              style="max-width: 210px; min-width: 210px" outlined dense filled hide-details
+                              @change="scrollDown(network1 && network2)">
                       <template v-slot:append-outer>
                         <v-tooltip right>
                           <template v-slot:activator="{on, attrs}">
@@ -133,7 +136,9 @@
                 <v-row style="margin: 8px" justify="center">
                   <v-col>
                     <v-select label="Network 2" :items="networks[networkType]" v-model="network2"
-                              style="max-width: 210px; min-width: 210px" outlined dense filled hide-details @change="scrollDown(network1 && network2)">
+                              append-icon="mdi-menu-down"
+                              style="max-width: 210px; min-width: 210px" outlined dense filled hide-details
+                              @change="scrollDown(network1 && network2)">
                       <template v-slot:append-outer>
                         <v-tooltip right>
                           <template v-slot:activator="{on, attrs}">
@@ -167,7 +172,7 @@
                 <v-container style="margin-top: 16px">
                   <v-row style="margin: 8px" justify="center">
                     <v-col class="flex_content_center">
-                      <v-select label="ID Space"
+                      <v-select label="ID Space" append-icon="mdi-menu-down"
                                 :items="network1.indexOf('comorbidity') > -1 || network2.indexOf('comorbidity')> -1? [{value: 'ICD10', text: 'ICD10'}] : network_ids[networkType]"
                                 v-model="network_id"
                                 style="max-width: 210px; min-width: 210px" outlined dense filled hide-details
@@ -216,11 +221,11 @@
         </v-container>
         <v-divider></v-divider>
       </template>
-      <div style="display: flex; margin-top:8px">
+      <div style="display: flex; margin:8px">
         <v-btn color="primary" @click="checkEvent" :disabled="!(network1 && network2 && network_id)"
                style="margin-left: auto; margin-right: auto; justify-self: center">
           Evaluate
-          <v-icon right>fas fa-angle-right</v-icon>
+          <v-icon right>mdi-chevron-right</v-icon>
         </v-btn>
       </div>
       <v-divider></v-divider>
@@ -236,7 +241,7 @@
               <v-container>
                 <v-row justify="center">
                   <span>
-                  Local<v-icon v-show="!local_scores" right style="top:-2px">fas fa-gear fa-spin</v-icon>
+                  Local<v-icon v-show="!local_scores" right style="top:-2px">mdi-cog fa-spin</v-icon>
                     </span>
                 </v-row>
                 <v-row justify="center" v-if="local_scores">
@@ -267,7 +272,7 @@
               <v-container>
                 <v-row justify="center">
                   <span>
-                  Cluster<v-icon v-show="!cluster_scores" right style="top:-2px">fas fa-gear fa-spin</v-icon>
+                  Cluster<v-icon v-show="!cluster_scores" right style="top:-2px">mdi-cog fa-spin</v-icon>
                     </span>
                 </v-row>
                 <v-row justify="center" v-if="cluster_scores">
@@ -298,7 +303,7 @@
               <v-container>
                 <v-row justify="center">
                   <span>
-                  Global<v-icon v-show="!global_scores" right style="top:-2px">fas fa-gear fa-spin</v-icon>
+                  Global<v-icon v-show="!global_scores" right style="top:-2px">mdi-cog fa-spin</v-icon>
                     </span>
                 </v-row>
 
@@ -326,10 +331,22 @@
                     </template>
                   </v-simple-table>
                   <v-select style="max-width: 210px; min-width: 210px" outlined dense filled hide-details
-                            :items="Object.keys(global_scores).map(k=>{return{value:k, text:k}})"
+                            append-icon="mdi-menu-down"
                             v-model="global_score_measure" label="Measure"></v-select>
                 </v-row>
               </v-container>
+            </v-col>
+          </v-row>
+          <v-row justify="center" style="margin-bottom: 16px">
+            <v-col cols="10" class="flex_content_center">
+              <div style="width: 100%">
+                <drugst-one
+                    id='drugstone-component-id'
+                    groups='{"nodeGroups":{"patient":{"type":"patient","color":"#000000","font":{"color":"#000000"},"groupName":"Patient","shape":"image","image":"https://static.thenounproject.com/png/22780-200.png"},"condition":{"type":"condition","color":"#000000","font":{"color":"#000000"},"groupName":"Condition","shape":"text"},"important":{"type":"gene","color":"#ff881f","font":{"color":"#000000"},"groupName":"Important Gene","shape":"star"},"gene":{"type":"gene","color":"#4da300","font":{"color":"#f0f0f0"},"groupName":"Gene","shape":"circle"},"foundDrug":{"type":"drug","color":"#F12590","font":{"color":"#000000"},"groupName":"Drug","shape":"diamond"}},"edgeGroups":{"genotype":{"color":"#000000","groupName":"Relevant Gene"},"has-condition":{"color":"#000000","groupName":"Has Condition","dashes":[2,2]},"default":{"color":"#000000","groupName":"default edge"},"ggi":{"color":"#000000","groupName":"Interaction","dashes":[3,2]}}}'
+                    config='{"identifier":"symbol","title":"Cluster visualization","nodeShadow":true,"edgeShadow":false,"autofillEdges":false,"physicsOn":true,"showNetworkMenu":"right","showNetworkMenuButtonExpression":false,"showNetworkMenuButtonAdjacentDrugs":false,"showNetworkMenuButtonAdjacentDisordersProteins":false,"showNetworkMenuButtonAdjacentDisordersDrugs":false}'
+                    network='{"nodes":[{"id":"patient-1","group":"patient","x":592,"y":446},{"id":"patient-2","group":"patient","x":235,"y":87},{"id":"patient-3","group":"patient","x":105,"y":369},{"id":"ATM","label":"ATM","group":"gene","x":289,"y":242},{"id":"BARD1","label":"BARD1","group":"gene","x":44,"y":250},{"id":"BRCA1","label":"BRCA1","group":"gene","x":466,"y":576},{"id":"BRCA2","label":"BRCA2","group":"gene","x":507,"y":285},{"id":"BRIP1","label":"BRIP1","group":"gene","x":54,"y":474},{"id":"CHEK2","label":"CHEK2","group":"gene","x":216,"y":590},{"id":"CDH1","label":"CDH1","group":"gene","x":320,"y":-57},{"id":"NF1","label":"NF1","group":"gene","x":481,"y":111},{"id":"NBN","label":"NBN","group":"gene","x":-57,"y":314},{"id":"PALB2","label":"PALB2","group":"gene","x":450,"y":190},{"id":"PTEN","label":"PTEN","group":"important","x":305,"y":494},{"id":"RAD51C","label":"RAD51C","group":"gene","x":182,"y":-90},{"id":"RAD51D","label":"RAD51D","group":"gene","x":368,"y":73},{"id":"STK11","label":"STK11","group":"gene","x":686,"y":330},{"id":"TP53","label":"TP53","group":"important","x":333,"y":316},{"id":"subtype-1","label":"Subtype 1","group":"condition","x":556,"y":171},{"id":"subtype-2","label":"Subtype 2","group":"condition","x":-87,"y":221}],"edges":[{"from":"BRCA1","to":"BRCA2","group":"ggi"},{"from":"ATM","to":"BARD1","group":"ggi"},{"from":"BRCA1","to":"CHEK2","group":"ggi"},{"from":"RAD51C","to":"RAD51D","group":"ggi"},{"from":"STK11","to":"TP53","group":"ggi"},{"from":"TP53","to":"PALB2","group":"ggi"},{"from":"TP53","to":"RAD51D","group":"ggi"},{"from":"TP53","to":"NF1","group":"ggi"},{"from":"TP53","to":"BRCA1","group":"ggi"},{"from":"TP53","to":"BRCA2","group":"ggi"},{"from":"PTEN","to":"BRCA1","group":"ggi"},{"from":"PTEN","to":"BRCA2","group":"ggi"},{"from":"TP53","to":"PTEN","group":"ggi"},{"from":"ATM","to":"PTEN","group":"ggi"},{"from":"CDH1","to":"RAD51D","group":"ggi"},{"from":"CDH1","to":"PALB2","group":"ggi"},{"from":"NBN","to":"BRIP1","group":"ggi"},{"from":"BRIP1","to":"PTEN","group":"ggi"},{"from":"patient-1","to":"BRCA1","group":"genotype"},{"from":"patient-1","to":"TP53","group":"genotype"},{"from":"patient-1","to":"BRCA2","group":"genotype"},{"from":"patient-1","to":"PTEN","group":"genotype"},{"from":"patient-2","to":"TP53","group":"genotype"},{"from":"patient-2","to":"NF1","group":"genotype"},{"from":"patient-2","to":"BARD1","group":"genotype"},{"from":"patient-3","to":"TP53","group":"genotype"},{"from":"patient-3","to":"PTEN","group":"genotype"},{"from":"patient-3","to":"NBN","group":"genotype"},{"from":"patient-1","to":"subtype-1","group":"has-condition"},{"from":"patient-2","to":"subtype-1","group":"has-condition"},{"from":"patient-3","to":"subtype-2","group":"has-condition"}]}'>
+                </drugst-one>
+              </div>
             </v-col>
           </v-row>
         </v-container>
@@ -387,14 +404,65 @@ export default {
       network1: undefined,
       network2: undefined,
       networkType: undefined,
-      network_ids: {'diseasome': [{value: 'MONDO', text: 'MONDO'}, {value: 'ICD10', text: 'ICD10'}], 'drugome': [{value:'DrugBank', text:'DrugBank'}]},
+      network_ids: {
+        'diseasome': [{value: 'MONDO', text: 'MONDO'}, {value: 'ICD10', text: 'ICD10'}],
+        'drugome': [{value: 'DrugBank', text: 'DrugBank'}]
+      },
       network_id: undefined,
       nodes: "",
-      results: false,
-      local_scores: undefined,
+      results: true,
+      local_scores: {
+        "node": {
+          "486": "mondo.0004975",
+          "921": "mondo.0004976",
+          "948": "mondo.0007739"
+        },
+        "local_p_value": {
+          "486": 0.988011988011988,
+          "921": 0.6553446553446554,
+          "948": 0.0089910089910089
+        }
+      },
       global_score_measure: "empirical_p_values",
+      // cluster_scores: {
+      //   "distance_type": {
+      //     "0": "normalized_ranks",
+      //     "1": "normalized_scores",
+      //     "2": "topology_only"
+      //   },
+      //   "p_value": {
+      //     "0": 0.000999000999000999,
+      //     "1": 0.025974025974025976,
+      //     "2": 0.30569430569430567
+      //   }
+      // },
       cluster_scores: undefined,
-      global_scores: undefined,
+      global_scores: {
+        "empirical_p_values": {
+          "distance_type": {
+            "0": "topology_only",
+            "1": "normalized_ranks",
+            "2": "normalized_scores"
+          },
+          "p_value": {
+            "0": 0.0009990009990009,
+            "1": 0.0009990009990009,
+            "2": 0.0009990009990009
+          }
+        },
+        "mwu_p_values": {
+          "distance_type": {
+            "0": "topology_only",
+            "1": "normalized_ranks",
+            "2": "normalized_scores"
+          },
+          "p_value": {
+            "0": 0.1576292089836642,
+            "1": 0.0783986196799947,
+            "2": 0.1385473637570792
+          }
+        }
+      },
     }
   },
 
@@ -429,9 +497,11 @@ export default {
       return items
     },
 
-    scrollDown: function(bool){
-      if(bool)
-        setTimeout(()=>{window.scrollTo({top: 5000, behavior:'smooth'})},200)
+    scrollDown: function (bool) {
+      if (bool)
+        setTimeout(() => {
+          window.scrollTo({top: 5000, behavior: 'smooth'})
+        }, 200)
     },
 
     checkEvent: async function () {

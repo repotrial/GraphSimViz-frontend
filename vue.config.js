@@ -5,6 +5,9 @@ module.exports = {
         'vuetify'
     ],
     configureWebpack: {
+        externals: {
+            'drugst-one': 'ELEMENT'
+        },
         module: {
             exprContextCritical: false
         },
