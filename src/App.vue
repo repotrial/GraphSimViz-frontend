@@ -60,6 +60,8 @@ export default {
 </script>
 <style>
 :root{
-  --drgstn-height: 500px
+  --drgstn-height: 500px;
+  --drgstn-text-secondary: #ffbd8e;
+  --drgstn-primary: #2d105f;
 }
 </style>

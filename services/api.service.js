@@ -17,6 +17,12 @@ const ApiService = {
         return axios.put(resource, data)
     },
 
+    get_networks(data){
+        return this.post("/get_networks", data).then(response => {
+            return response.data
+        })
+    },
+
     get_local_scores(data) {
         return this.post("/get_local_scores", data).then(response => {
             return response.data
