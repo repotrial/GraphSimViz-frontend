@@ -61,7 +61,7 @@ export default {
 <style>
 :root{
   --drgstn-height: 500px;
-  --drgstn-text-secondary: #ffbd8e;
+  --drgstn-text-secondary: #ffffff;
   --drgstn-primary: #2d105f;
 }
 </style>

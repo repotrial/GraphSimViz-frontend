@@ -109,7 +109,7 @@
               <v-container>
                 <v-row style="margin: 8px" justify="center">
                   <v-col>
-                    <v-select label="Network 1" :items="networks[networkType]" v-model="network1"
+                    <v-select label="Network 1" :items="networks[networkType].filter(e=> network2 == null || e.value !== network2)" v-model="network1"
                               append-icon="mdi-menu-down"
                               style="max-width: 210px; min-width: 210px" outlined dense filled hide-details
                               @change="scrollDown(network1 && network2)">
@@ -135,7 +135,7 @@
               <v-container>
                 <v-row style="margin: 8px" justify="center">
                   <v-col>
-                    <v-select label="Network 2" :items="networks[networkType]" v-model="network2"
+                    <v-select label="Network 2" :items="networks[networkType].filter(e=> network1 == null || e.value !== network1)" v-model="network2"
                               append-icon="mdi-menu-down"
                               style="max-width: 210px; min-width: 210px" outlined dense filled hide-details
                               @change="scrollDown(network1 && network2)">
@@ -190,6 +190,9 @@
                       </v-select>
                     </v-col>
                     <!--                  </v-col>-->
+                  </v-row>
+                  <v-row justify="center" justify-md="start" v-if="network_id==='MONDO'">
+                    <v-btn @click="nodes = 'mondo.0004975\nmondo.0000437\nmondo.0007739\nmondo.0005180\nmondo.0004976\nmondo.0020128\nmondo.0005301'">Example</v-btn>
                   </v-row>
                   <v-row justify="center" justify-md="start">
                     <v-col cols="12" :class="{'flex_content_center':mobile}">
@@ -249,17 +252,24 @@
                     <template v-slot:default>
                       <thead>
                       <tr>
-                        <th v-for="h of Object.keys(local_scores)" :key="h">
-                          {{ h }}
+                        <th>
+                          Name
+                        </th>
+                        <th>
+                          Node
+                        </th>
+                        <th>
+                          Local p-value
                         </th>
                       </tr>
                       </thead>
                       <tbody>
                       <tr v-for="idx in Object.keys(local_scores.node)"
                           :key="'local'+idx">
-                        <td>{{ Object.values(local_scores)[0][idx] }}</td>
+                        <td>{{ local_scores.names[idx] }}</td>
+                        <td>{{local_scores.node[idx] }}</td>
                         <td>
-                          {{ Object.values(local_scores)[1][idx].toExponential(3) }}
+                          <v-chip dark small :color="get_significance_color(local_scores.local_p_value[idx])">{{ local_scores.local_p_value[idx].toExponential(3) }}</v-chip>
                         </td>
                       </tr>
                       </tbody>
@@ -290,7 +300,7 @@
                           :key="'cluster'+idx">
                         <td>{{ Object.values(Object.values(cluster_scores)[0])[idx] }}</td>
                         <td>
-                          {{ Object.values(Object.values(cluster_scores)[1])[idx].toExponential(3) }}
+                          <v-chip dark small :color="get_significance_color(Object.values(Object.values(cluster_scores)[1])[idx])">{{ Object.values(Object.values(cluster_scores)[1])[idx].toExponential(3) }}</v-chip>
                         </td>
                       </tr>
                       </tbody>
@@ -322,9 +332,7 @@
                           :key="'global'+idx">
                         <td>{{ Object.values(Object.values(global_scores[global_score_measure])[0])[idx] }}</td>
                         <td>
-                          {{
-                            Object.values(Object.values(global_scores[global_score_measure])[1])[idx].toExponential(3)
-                          }}
+                          <v-chip dark small :color="get_significance_color(Object.values(Object.values(global_scores[global_score_measure])[1])[idx])">{{ Object.values(Object.values(global_scores[global_score_measure])[1])[idx].toExponential(3) }}</v-chip>
                         </td>
                       </tr>
                       </tbody>
@@ -418,23 +426,52 @@ export default {
       global_scores: undefined,
       groupConfig: {
         "nodeGroups": {
-          "C1": {
-            "type": "cluster 1",
-            "color": "#4da300",
+          "****": {
+            "type": 'node',
+            "color": "#ffbd8e",
             "font": {"color": "#f0f0f0"},
-            "groupName": "Cluster 1",
+            "groupName": "****",
             "shape": "circle"
           },
-          "C2": {
-            "type": "cluster 2",
-            "color": "#0029a3",
+          "***": {
+            "type": 'node',
+            "color": "#fac1c0",
             "font": {"color": "#f0f0f0"},
-            "groupName": "Cluster 2",
+            "groupName": "***",
             "shape": "circle"
-          }
+          },
+          "**": {
+            "type": 'node',
+            "color": "#e08ba5",
+            "font": {"color": "#f0f0f0"},
+            "groupName": "**",
+            "shape": "circle"
+          },
+          "*": {
+            "type": 'node',
+            "color": "#712081",
+            "font": {"color": "#f0f0f0"},
+            "groupName": "*",
+            "shape": "circle"
+          },
+          "ns": {
+            "type": 'node',
+            "color": "#2d105f",
+            "font": {"color": "#f0f0f0"},
+            "groupName": "ns",
+            "shape": "circle"
+          },
+          "missing": {
+            "type": 'node',
+            "color": "#000000",
+            "font": {"color": "#000000"},
+            "groupName": "missing",
+            "shape": "triangle"
+          },
         },
         "edgeGroups": {
-          "default": {"color": "#000000", "groupName": "default edge"}
+          "conserved": {"color": "#000000", "groupName": "Conserved"},
+          "non-conserved": {"color": "#000000", "groupName": "Non-conserved", "dashes": [2, 4]},
         }
       },
       networkConfig: {
@@ -460,31 +497,6 @@ export default {
 
   methods: {
 
-    idsToList: function (ids) {
-      return ids.split(/\n/).filter(id => id.length > 0)
-    },
-
-
-    setNotification: function (message, timeout) {
-      if (timeout)
-        this.notification.timeout = timeout
-      if (message)
-        this.notification.message = message
-      this.notification.show = true
-    }
-    ,
-
-    getBackgroundModelItems: function () {
-      let items = this.backgroundModels;
-      if (this.mode !== 'network')
-        items = items.filter(e => e.value !== 'network')
-      if (this.mode === 'cluster')
-        items = items.filter(e => e.value === 'complete')
-      if (this.mode === 'network')
-        items = items.filter(e => e.value === 'network')
-      return items
-    },
-
     getGroups: function () {
       return JSON.stringify(this.groupConfig)
     },
@@ -504,21 +516,62 @@ export default {
         }, 200)
     },
 
-    convertNetworks: function (networks) {
-      let nodes = []
-      let edges = []
+    get_significance_group: function (p_value) {
+      let group = 'ns'
+      if (p_value <= 0.005) {
+        group = '****'
+      } else if (p_value <= 0.001) {
+        group = '***'
+      } else if (p_value <= 0.05) {
+        group = '**'
+      } else if (p_value <= 0.1) {
+        group = '*'
+      }
+      return group
+    },
+
+    get_significance_color: function(p_value){
+      let group = this.get_significance_group(p_value)
+      return this.groupConfig.nodeGroups[group].color
+    },
+
+    convertNetworks: function (input, networks) {
+      let edge_map = {}
+      let node_map = {}
+      input.nodes.forEach(n => {
+        node_map[n] = {id: n, label: n, group: 'missing'}
+      })
+      let scores = this.local_scores
+      Object.keys(scores.node).forEach(nid => {
+        let n = scores.node[nid]
+        node_map[n].group = this.get_significance_group(scores.local_p_value[nid])
+        node_map[n].label = scores.names[nid]
+      })
+
       for (let nw_idx in networks) {
         let nw = networks[nw_idx]
         let node_map = nw.nodes
-        nodes = nodes.concat(Object.values(nw.nodes).map(n => {
-          let idx = parseInt(nw_idx)+1
-          return {id: n + "_c"+nw_idx, label: n + "(C"+idx+")", group: 'C'+idx}
-        }))
-        edges = edges.concat(nw.edges.map(e => {
-          return {from: node_map[e[0]]+"_c"+nw_idx, to: node_map[e[1]]+"_c"+nw_idx}
-        }))
-        this.network = {nodes: nodes, edges: edges}
+        let edges = nw.edges.map(e => {
+          let n1 = node_map[e[0]]
+          let n2 = node_map[e[1]]
+          if (n1 < n2)
+            return {from: n1, to: n2, group: 'non-conserved'}
+          return {from: n2, to: n1, group: 'non-conserved'}
+        })
+        edges.forEach(e => {
+          let key = e.from + "_" + e.to
+          if (edge_map[key]) {
+            edge_map[key].group = 'conserved'
+            delete edge_map[key].label
+          } else {
+            edge_map[key] = e
+            e.label = (nw_idx === 0 ? input.network_type1 : input.network_type2).split('_')[1] + "-based"
+          }
+        })
       }
+
+      this.network = {nodes: Object.values(node_map), edges: Object.values(edge_map)}
+      console.log(this.network)
     },
 
     checkEvent: async function () {
@@ -535,26 +588,31 @@ export default {
       this.local_scores = undefined
       this.cluster_scores = undefined
       this.global_scores = undefined
+      this.network = undefined
 
       this.results = true
-      await this.$http.get_networks(params).then(response => {
-        this.convertNetworks(response)
-      })
 
       await this.$http.get_local_scores(params).then(response => {
-        this.local_scores = response
-        console.log(this.local_scores)
+
         this.scrollDown(true)
+        let names = {}
+        Object.keys(response.node).forEach(nid => {
+          names[nid] = 'D' + (Object.keys(names).length + 1)
+        })
+        response.names = names
+        this.local_scores = response
+        this.$http.get_networks(params).then(response => {
+          this.convertNetworks(params, response)
+        })
       })
+
       await this.$http.get_global_scores(params).then(response => {
         this.global_scores = response
         this.global_score_measure = Object.keys(response)[0]
-        console.log(response)
         this.scrollDown(true)
       })
       this.$http.get_cluster_scores(params).then(response => {
         this.cluster_scores = response
-        console.log(response)
         this.scrollDown(true)
       })
       this.scrollDown(true)
