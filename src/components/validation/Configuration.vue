@@ -603,8 +603,8 @@ export default {
         this.local_scores = response
         this.$http.get_networks(params).then(response => {
           this.convertNetworks(params, response)
-        })
-      })
+        }).catch(console.error)
+      }).catch(err=>console.error(err))
 
       await this.$http.get_global_scores(params).then(response => {
         this.global_scores = response
