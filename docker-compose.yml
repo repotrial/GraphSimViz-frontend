@@ -2,7 +2,7 @@ version: "3.3"
 services:
   web:
     image: andimajore/graphsimviz_frontend:latest
-    container_name: gvl-frontend
+    container_name: graphsimviz-frontend
     build: .
     ports:
       - "8031:80"
