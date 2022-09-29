@@ -1,7 +1,7 @@
 version: "3.3"
 services:
   web:
-    image: andimajore/gvl_frontend:latest
+    image: andimajore/graphsimviz_frontend:latest
     container_name: gvl-frontend
     build: .
     ports:
