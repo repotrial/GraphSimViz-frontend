@@ -537,7 +537,7 @@ export default {
       let group = 'ns'
       if (p_value <= 0.005) {
         group = '****'
-      } else if (p_value <= 0.001) {
+      } else if (p_value <= 0.01) {
         group = '***'
       } else if (p_value <= 0.05) {
         group = '**'
