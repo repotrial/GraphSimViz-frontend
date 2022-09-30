@@ -535,13 +535,13 @@ export default {
 
     get_significance_group: function (p_value) {
       let group = 'ns'
-      if (p_value <= 0.005) {
+      if (p_value <= 0.0001) {
         group = '****'
-      } else if (p_value <= 0.01) {
+      } else if (p_value <= 0.001) {
         group = '***'
-      } else if (p_value <= 0.05) {
+      } else if (p_value <= 0.01) {
         group = '**'
-      } else if (p_value <= 0.1) {
+      } else if (p_value <= 0.05) {
         group = '*'
       }
       return group
