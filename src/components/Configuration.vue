@@ -109,7 +109,9 @@
               <v-container>
                 <v-row style="margin: 8px" justify="center">
                   <v-col>
-                    <v-select label="Network 1" :items="networks[networkType].filter(e=> network2 == null || e.value !== network2)" v-model="network1"
+                    <v-select label="Network 1"
+                              :items="networks[networkType].filter(e=> network2 == null || e.value !== network2)"
+                              v-model="network1"
                               append-icon="mdi-menu-down"
                               style="max-width: 210px; min-width: 210px" outlined dense filled hide-details
                               @change="scrollDown(network1 && network2)">
@@ -135,7 +137,9 @@
               <v-container>
                 <v-row style="margin: 8px" justify="center">
                   <v-col>
-                    <v-select label="Network 2" :items="networks[networkType].filter(e=> network1 == null || e.value !== network1)" v-model="network2"
+                    <v-select label="Network 2"
+                              :items="networks[networkType].filter(e=> network1 == null || e.value !== network1)"
+                              v-model="network2"
                               append-icon="mdi-menu-down"
                               style="max-width: 210px; min-width: 210px" outlined dense filled hide-details
                               @change="scrollDown(network1 && network2)">
@@ -192,7 +196,10 @@
                     <!--                  </v-col>-->
                   </v-row>
                   <v-row justify="center" justify-md="start" v-if="network_id==='MONDO'">
-                    <v-btn @click="nodes = 'mondo.0004975\nmondo.0000437\nmondo.0007739\nmondo.0005180\nmondo.0004976\nmondo.0020128\nmondo.0005301'">Example</v-btn>
+                    <v-btn
+                        @click="nodes = 'mondo.0004975\nmondo.0000437\nmondo.0007739\nmondo.0005180\nmondo.0004976\nmondo.0020128\nmondo.0005301'">
+                      Example
+                    </v-btn>
                   </v-row>
                   <v-row justify="center" justify-md="start">
                     <v-col cols="12" :class="{'flex_content_center':mobile}">
@@ -238,7 +245,7 @@
             Results
           </v-subheader>
         </div>
-        <v-container style="margin-top: 16px">
+        <v-container style="margin-top: 16px" v-if="results">
           <v-row justify="center" justify-md="start">
             <v-col cols="4" :class="{'flex_content_center':mobile}">
               <v-container>
@@ -267,9 +274,11 @@
                       <tr v-for="idx in Object.keys(local_scores.node)"
                           :key="'local'+idx">
                         <td>{{ local_scores.names[idx] }}</td>
-                        <td>{{local_scores.node[idx] }}</td>
+                        <td>{{ local_scores.node[idx] }}</td>
                         <td>
-                          <v-chip dark small :color="get_significance_color(local_scores.local_p_value[idx])">{{ local_scores.local_p_value[idx].toExponential(3) }}</v-chip>
+                          <v-chip dark small :color="get_significance_color(local_scores.local_p_value[idx])">
+                            {{ local_scores.local_p_value[idx].toExponential(3) }}
+                          </v-chip>
                         </td>
                       </tr>
                       </tbody>
@@ -300,7 +309,10 @@
                           :key="'cluster'+idx">
                         <td>{{ Object.values(Object.values(cluster_scores)[0])[idx] }}</td>
                         <td>
-                          <v-chip dark small :color="get_significance_color(Object.values(Object.values(cluster_scores)[1])[idx])">{{ Object.values(Object.values(cluster_scores)[1])[idx].toExponential(3) }}</v-chip>
+                          <v-chip dark small
+                                  :color="get_significance_color(Object.values(Object.values(cluster_scores)[1])[idx])">
+                            {{ Object.values(Object.values(cluster_scores)[1])[idx].toExponential(3) }}
+                          </v-chip>
                         </td>
                       </tr>
                       </tbody>
@@ -332,7 +344,12 @@
                           :key="'global'+idx">
                         <td>{{ Object.values(Object.values(global_scores[global_score_measure])[0])[idx] }}</td>
                         <td>
-                          <v-chip dark small :color="get_significance_color(Object.values(Object.values(global_scores[global_score_measure])[1])[idx])">{{ Object.values(Object.values(global_scores[global_score_measure])[1])[idx].toExponential(3) }}</v-chip>
+                          <v-chip dark small
+                                  :color="get_significance_color(Object.values(Object.values(global_scores[global_score_measure])[1])[idx])">
+                            {{
+                              Object.values(Object.values(global_scores[global_score_measure])[1])[idx].toExponential(3)
+                            }}
+                          </v-chip>
                         </td>
                       </tr>
                       </tbody>
@@ -419,7 +436,7 @@ export default {
       },
       network_id: undefined,
       nodes: "",
-      results: true,
+      results: false,
       local_scores: undefined,
       global_score_measure: "empirical_p_values",
       cluster_scores: undefined,
@@ -465,7 +482,7 @@ export default {
             "type": 'node',
             "color": "#000000",
             "font": {"color": "#000000"},
-            "groupName": "missing",
+            "groupName": "N/A",
             "shape": "triangle"
           },
         },
@@ -530,7 +547,7 @@ export default {
       return group
     },
 
-    get_significance_color: function(p_value){
+    get_significance_color: function (p_value) {
       let group = this.get_significance_group(p_value)
       return this.groupConfig.nodeGroups[group].color
     },
@@ -592,7 +609,7 @@ export default {
 
       this.results = true
 
-      await this.$http.get_local_scores(params).then(response => {
+      this.$http.get_local_scores(params).then(response => {
 
         this.scrollDown(true)
         let names = {}
@@ -604,20 +621,33 @@ export default {
         this.$http.get_networks(params).then(response => {
           this.convertNetworks(params, response)
         }).catch(console.error)
-      }).catch(err=>console.error(err))
+      }).catch(err => console.error(err))
 
-      await this.$http.get_global_scores(params).then(response => {
+      this.$http.get_global_scores(params).then(response => {
         this.global_scores = response
         this.global_score_measure = Object.keys(response)[0]
         this.scrollDown(true)
       })
-      this.$http.get_cluster_scores(params).then(response => {
-        this.cluster_scores = response
-        this.scrollDown(true)
-      })
+      this.request_cluster_values(params)
       this.scrollDown(true)
+    },
+
+    request_cluster_values: function (params) {
+      this.$http.get_cluster_scores(params).then(response => {
+        console.log("Requesting cluster values")
+        if (response.done || response.error) {
+          this.cluster_scores = response.result
+          this.scrollDown(true)
+        } else {
+          setTimeout(() => this.request_cluster_values(params), 5000)
+        }
+
+      })
     }
   },
+
+
+
 }
 </script>
 

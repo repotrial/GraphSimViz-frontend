@@ -32,19 +32,14 @@
         </v-subheader>
       </div>
     </div>
-<!--    <Selection v-if="step===0" @startValidationEvent="startValidation" :mobile="mobile"></Selection>-->
     <Configuration v-if="step===0" @resetEvent="resetValidation" :mode="params.mode" :mobile="mobile"
                    @validationEvent="validate"></Configuration>
-    <Results v-else-if="step===1" @resetEvent="resetValidation" :params="params" :id-map="idMap"
-             :mobile="mobile"></Results>
   </div>
 </template>
 
 <script>
 
-// import Selection from "@/components/validation/Selection";
-import Configuration from "@/components/validation/Configuration";
-import Results from "@/components/validation/Results";
+import Configuration from "@/components/Configuration";
 
 export default {
 
@@ -94,7 +89,6 @@ export default {
   },
 
   components: {
-    Results,
     Configuration,
   }
 
