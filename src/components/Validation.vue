@@ -2,7 +2,11 @@
   <div>
     <v-card :style="{'background-color': '#ffbd8e', width: '100%', padding: mobile ? '16px' :'32px', display: 'flex'}">
       <div :style="{width:  '32%',  'justify-content': 'flex-start'}">
-        <v-img width="100%"></v-img>
+        <picture>
+          <!--          <source :srcset="getLogoPath()" type="image/avif" >-->
+          <source :srcset="getLogoPathFallback()" type="image/png" >
+          <img alt="For safari users" :src="getLogoPathFallback()" width="100%">
+        </picture>
       </div>
       <div style="width: 60%; justify-content: flex-end; margin-left: auto; margin-right: 0">
         <div style=" height: 100%;display:flex;">
@@ -74,6 +78,10 @@ export default {
     },
     getIllustration: function () {
       return this.$config.STATIC_PATH + "assets/graphsimviz_summary_illustration.png"
+    },
+
+    getLogoPathFallback: function(){
+      return this.$config.STATIC_PATH + "assets/logo.png"
     },
 
 
