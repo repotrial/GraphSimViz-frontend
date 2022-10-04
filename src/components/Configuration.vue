@@ -620,7 +620,7 @@ export default {
           'id_space': this.network_id,
           'nodes': new_nodes
         }
-        this.request_results(params)
+        this.request_results(params, response)
         // this.convertNetworks(params, response)
       }).catch(err => console.error(err))
 
@@ -655,7 +655,7 @@ export default {
 
     },
 
-    request_results: function (params) {
+    request_results: function (params, networks) {
       this.$http.get_local_scores(params).then(response => {
 
         this.scrollDown(true)
@@ -665,9 +665,13 @@ export default {
         })
         response.names = names
         this.local_scores = response
-        this.$http.get_networks(params).then(response => {
-          this.convertNetworks(params, response)
-        }).catch(console.error)
+        if (networks) {
+          this.convertNetworks(params, networks)
+        } else {
+          this.$http.get_networks(params).then(response => {
+            this.convertNetworks(params, response)
+          }).catch(console.error)
+        }
       }).catch(err => console.error(err))
 
       this.$http.get_global_scores(params).then(response => {
