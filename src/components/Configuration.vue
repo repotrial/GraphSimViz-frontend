@@ -237,6 +237,11 @@
           Evaluate
           <v-icon right>mdi-chevron-right</v-icon>
         </v-btn>
+        <v-btn color="primary" @click="load_neighbors" :disabled="!network"
+               style="margin-left: auto; margin-right: auto; justify-self: center">
+          Fist neighbor Network
+          <v-icon right>mdi-chevron-right</v-icon>
+        </v-btn>
       </div>
       <v-divider></v-divider>
       <template v-if="results">
@@ -255,7 +260,7 @@
                     </span>
                 </v-row>
                 <v-row justify="center" v-if="local_scores">
-                  <v-simple-table>
+                  <v-simple-table height="400px">
                     <template v-slot:default>
                       <thead>
                       <tr>
@@ -591,6 +596,43 @@ export default {
       console.log(this.network)
     },
 
+    load_neighbors: async function () {
+      let params = {
+        'network_type1': this.network1,
+        'network_type2': this.network2,
+        'id_space': this.network_id,
+        'nodes': []
+      }
+      if (this.nodes.length > 0)
+        params.nodes = this.nodes.split("\n").map(e => e.trim()).filter(e => e.length > 0)
+      this.results = false
+
+
+      this.results = true
+      this.$http.get_fist_neighbor_networks(params).then(response => {
+        console.log(response)
+        let new_nodes = []
+
+        response.forEach(nw => new_nodes = new_nodes.concat(Object.values(nw.nodes)))
+        let params = {
+          'network_type1': this.network1,
+          'network_type2': this.network2,
+          'id_space': this.network_id,
+          'nodes': new_nodes
+        }
+        this.request_results(params)
+        // this.convertNetworks(params, response)
+      }).catch(err => console.error(err))
+
+      // this.$http.get_global_scores(params).then(response => {
+      //   this.global_scores = response
+      //   this.global_score_measure = Object.keys(response)[0]
+      //   this.scrollDown(true)
+      // })
+      // this.request_cluster_values(params)
+      this.scrollDown(true)
+    },
+
     checkEvent: async function () {
       let params = {
         'network_type1': this.network1,
@@ -609,6 +651,11 @@ export default {
 
       this.results = true
 
+      this.request_results(params)
+
+    },
+
+    request_results: function (params) {
       this.$http.get_local_scores(params).then(response => {
 
         this.scrollDown(true)
@@ -644,8 +691,8 @@ export default {
 
       })
     }
-  },
 
+  },
 
 
 }

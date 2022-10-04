@@ -41,5 +41,10 @@ const ApiService = {
         })
     },
 
+    get_fist_neighbor_networks(data) {
+        return this.post("/get_fist_neighbor_networks", data).then(response => {
+            return response.data
+        })
+    }
 }
 export default ApiService
