@@ -60,7 +60,7 @@ export default {
 </script>
 <style>
 :root{
-  --drgstn-height: 500px;
+  --drgstn-height: 400px;
   --drgstn-text-secondary: #ffffff;
   --drgstn-primary: #2d105f;
 }

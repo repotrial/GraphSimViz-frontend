@@ -1,71 +1,151 @@
 <template>
   <div style="width: 100%;  padding: 16px">
-    <!--    <div v-if="isMobile()" style="display: flex; margin-bottom: 16px">-->
-    <!--      <v-btn color="primary" @click="checkEvent" style="margin-left: auto; margin-right: 0; justify-self: flex-end">-->
-    <!--        Validate-->
-    <!--        <v-icon right>fas fa-angle-right</v-icon>-->
-    <!--      </v-btn>-->
-    <!--    </div>-->
     <div v-bind:class="{flex:!mobile}">
-      <!--      <div v-if="(mode==='set' || mode ==='network') && type==='gene'"-->
-      <!--           :class="{flex_self_center:!mobile, example_div_width:mobile}">-->
-      <!--        <v-btn color="primary" :class="{flex_self_center:mobile}" outlined @click="loadExample(mode, 'gene', mode)">-->
-      <!--          <v-icon left>far fa-lightbulb</v-icon>-->
-      <!--          {{ mode === 'network' ? 'Subnetwork Example' : 'Set only Example' }}-->
-      <!--        </v-btn>-->
-      <!--      </div>-->
-      <!--      <div v-if="(mode==='set') && type==='gene'"-->
-      <!--           :class="{flex_self_center:!mobile, example_div_width:mobile}">-->
-      <!--        <v-btn color="primary" :class="{flex_self_center:mobile}" outlined @click="loadExample(mode, 'gene', 'ref')">-->
-      <!--          <v-icon left>far fa-lightbulb</v-icon>-->
-      <!--          Reference Example-->
-      <!--        </v-btn>-->
-      <!--      </div>-->
-      <!--      <div v-if="mode==='cluster' && type==='gene'" :class="{flex_self_center:!mobile, example_div_width:mobile}">-->
-      <!--        <v-btn color="primary" :class="{flex_self_center:mobile}" outlined-->
-      <!--               @click="loadExample('cluster', 'gene')">-->
-      <!--          <v-icon left>far fa-lightbulb</v-icon>-->
-      <!--          Example-->
-      <!--        </v-btn>-->
-      <!--      </div>-->
-      <!--      <div v-if="mode==='network' && type==='gene'" :class="{flex_self_center:!mobile, example_div_width:mobile}">-->
-      <!--        <v-btn color="primary" :class="{flex_self_center:mobile}" outlined-->
-      <!--               @click="getExampleNetwork()">-->
-      <!--          <v-icon left>fas fa-download</v-icon>-->
-      <!--          Get example network-->
-      <!--        </v-btn>-->
-      <!--      </div>-->
-      <!--      <div v-if="mode==='cluster' && type==='disease'" :class="{flex_self_center:!mobile, example_div_width:mobile}">-->
-      <!--        <v-btn color="primary" :class="{flex_self_center:mobile}"-->
-      <!--               outlined-->
-      <!--               @click="loadExample('cluster', 'disease')">-->
-      <!--          <v-icon left>far fa-lightbulb</v-icon>-->
-      <!--          Example-->
-      <!--        </v-btn>-->
-      <!--      </div>-->
-      <!--      <div v-if="(mode==='set' || mode ==='network') && type==='disease'"-->
-      <!--           :class="{flex_self_center:!mobile, example_div_width:mobile}">-->
-      <!--        <v-btn color="primary" outlined :class="{flex_self_center:mobile}"-->
-      <!--               @click="loadExample(mode, 'disease')">-->
-      <!--          <v-icon left>far fa-lightbulb</v-icon>-->
-      <!--          {{ mode === 'network' ? 'Subnetwork Example' : 'Set only Example' }}-->
-      <!--        </v-btn>-->
-      <!--      </div>-->
-      <!--      <v-btn v-if="!isMobile()" color="primary" @click="checkEvent"-->
-      <!--             style="margin-left: auto; margin-right: 0; justify-self: flex-end">-->
-      <!--        Validate-->
-      <!--        <v-icon right>fas fa-angle-right</v-icon>-->
-      <!--      </v-btn>-->
     </div>
     <v-sheet style="margin-top: 16px;">
-      <v-divider></v-divider>
+      <div style="border:#858585 solid thin; border-radius: 16px; width: 90%; display: flex; align-self: center; margin-left: auto; margin-right: auto">
+        <template v-if="results">
+          <v-container style="margin-top: 16px" v-if="results">
+            <v-row justify="center" style="margin-bottom: 16px">
+              <v-col cols="12" class="flex_content_center" style="padding:0">
+                <div style="width: 100%" v-if="network">
+                  <drugst-one
+                      id='drugstone-component-id'
+                      :groups='getGroups()'
+                      :config='getConfig()'
+                      :network='getNetwork()'>
+                  </drugst-one>
+                </div>
+              </v-col>
+            </v-row>
+            <v-row justify="center" justify-md="start">
+              <v-col cols="4" :class="{'flex_content_center':mobile}">
+                <v-container>
+                  <v-row justify="center">
+                  <span style="color: #858585">
+                  <b>Local</b><v-icon v-show="!local_scores" right style="top:-2px">mdi-cog fa-spin</v-icon>
+                    </span>
+                  </v-row>
+                  <v-row justify="center" v-if="local_scores">
+                    <v-simple-table max-height="400px" dense>
+                      <template v-slot:default>
+                        <thead>
+                        <tr>
+                          <th>
+                            Name
+                          </th>
+                          <th>
+                            Node
+                          </th>
+                          <th>
+                            Local p-value
+                          </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="idx in Object.keys(local_scores.node)"
+                            :key="'local'+idx">
+                          <td>{{ local_scores.names[idx] }}</td>
+                          <td>{{ local_scores.node[idx] }}</td>
+                          <td>
+                            <v-chip dark small :color="get_significance_color(local_scores.local_p_value[idx])">
+                              {{ local_scores.local_p_value[idx].toExponential(3) }}
+                            </v-chip>
+                          </td>
+                        </tr>
+                        </tbody>
+                      </template>
+                    </v-simple-table>
+                  </v-row>
+                </v-container>
+              </v-col>
+              <v-col cols="4" :class="{'flex_content_center':mobile}">
+                <v-container>
+                  <v-row justify="center">
+                  <span style="color: #858585">
+                  <b>
+                  Cluster</b><v-icon v-show="!cluster_scores" right style="top:-2px">mdi-cog fa-spin</v-icon>
+                    </span>
+                  </v-row>
+                  <v-row justify="center" v-if="cluster_scores">
+                    <v-simple-table dense>
+                      <template v-slot:default>
+                        <thead>
+                        <tr>
+                          <th v-for="h of Object.keys(cluster_scores)" :key="h">
+                            {{ h }}
+                          </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="idx in Object.keys(Object.values(cluster_scores)[0])"
+                            :key="'cluster'+idx">
+                          <td>{{ Object.values(Object.values(cluster_scores)[0])[idx] }}</td>
+                          <td>
+                            <v-chip dark small
+                                    :color="get_significance_color(Object.values(Object.values(cluster_scores)[1])[idx])">
+                              {{ Object.values(Object.values(cluster_scores)[1])[idx].toExponential(3) }}
+                            </v-chip>
+                          </td>
+                        </tr>
+                        </tbody>
+                      </template>
+                    </v-simple-table>
+                  </v-row>
+                </v-container>
+              </v-col>
+              <v-col cols="4" :class="{'flex_content_center':mobile}">
+                <v-container>
+                  <v-row justify="center">
+                  <span style="color: #858585">
+                  <b>
+                  Global</b><v-icon v-show="!global_scores" right style="top:-2px">mdi-cog fa-spin</v-icon>
+                    </span>
+                  </v-row>
+
+                  <v-row v-if="global_scores" justify="center">
+                    <v-simple-table dense>
+                      <template v-slot:default>
+                        <thead>
+                        <tr>
+                          <th v-for="h of Object.keys(global_scores[global_score_measure])" :key="h">
+                            {{ h }}
+                          </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="idx in Object.keys(Object.values(global_scores[global_score_measure])[0])"
+                            :key="'global'+idx">
+                          <td>{{ Object.values(Object.values(global_scores[global_score_measure])[0])[idx] }}</td>
+                          <td>
+                            <v-chip dark small
+                                    :color="get_significance_color(Object.values(Object.values(global_scores[global_score_measure])[1])[idx])">
+                              {{
+                                Object.values(Object.values(global_scores[global_score_measure])[1])[idx].toExponential(3)
+                              }}
+                            </v-chip>
+                          </td>
+                        </tr>
+                        </tbody>
+                      </template>
+                    </v-simple-table>
+<!--                    <v-select style="max-width: 210px; min-width: 210px" outlined dense filled hide-details-->
+<!--                              append-icon="mdi-menu-down"-->
+<!--                              :items="Object.keys(global_scores).map(k=>{return{value:k, text:k}})"-->
+<!--                              v-model="global_score_measure" label="Measure"></v-select>-->
+                  </v-row>
+                </v-container>
+              </v-col>
+            </v-row>
+          </v-container>
+
+        </template>
+      </div>
       <div style="display: flex; justify-content: center">
         <v-subheader :class="{sh_mobile:mobile, sh:!mobile}">
           1. Network type
         </v-subheader>
       </div>
-      <!--      <v-alert v-if="errorTargetID" type="error" dense>Missing target ID type selection</v-alert>-->
-      <!--      <v-alert v-if="errorTargetIDs" type="error" dense>Missing targetIDs</v-alert>-->
       <v-container :class="{border_mobile:mobile, border:!mobile}">
         <v-row justify="center">
           <v-col cols="12" lg="4" :class="{'flex_content_center':mobile}">
@@ -234,155 +314,15 @@
       <div style="display: flex; margin:8px">
         <v-btn color="primary" @click="checkEvent" :disabled="!(network1 && network2 && network_id)"
                style="margin-left: auto; margin-right: auto; justify-self: center">
-          Evaluate
+          Visualize
           <v-icon right>mdi-chevron-right</v-icon>
         </v-btn>
-        <v-btn color="primary" @click="load_neighbors" :disabled="!network"
-               style="margin-left: auto; margin-right: auto; justify-self: center">
-          Fist neighbor Network
-          <v-icon right>mdi-chevron-right</v-icon>
-        </v-btn>
+        <!--        <v-btn color="primary" @click="load_neighbors" :disabled="!network"-->
+        <!--               style="margin-left: auto; margin-right: auto; justify-self: center">-->
+        <!--          Fist neighbor Network-->
+        <!--          <v-icon right>mdi-chevron-right</v-icon>-->
+        <!--        </v-btn>-->
       </div>
-      <v-divider></v-divider>
-      <template v-if="results">
-        <div style="display: flex; justify-content: center">
-          <v-subheader :class="{sh_mobile:mobile, sh:!mobile}">
-            Results
-          </v-subheader>
-        </div>
-        <v-container style="margin-top: 16px" v-if="results">
-          <v-row justify="center" justify-md="start">
-            <v-col cols="4" :class="{'flex_content_center':mobile}">
-              <v-container>
-                <v-row justify="center">
-                  <span>
-                  Local<v-icon v-show="!local_scores" right style="top:-2px">mdi-cog fa-spin</v-icon>
-                    </span>
-                </v-row>
-                <v-row justify="center" v-if="local_scores">
-                  <v-simple-table height="400px">
-                    <template v-slot:default>
-                      <thead>
-                      <tr>
-                        <th>
-                          Name
-                        </th>
-                        <th>
-                          Node
-                        </th>
-                        <th>
-                          Local p-value
-                        </th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      <tr v-for="idx in Object.keys(local_scores.node)"
-                          :key="'local'+idx">
-                        <td>{{ local_scores.names[idx] }}</td>
-                        <td>{{ local_scores.node[idx] }}</td>
-                        <td>
-                          <v-chip dark small :color="get_significance_color(local_scores.local_p_value[idx])">
-                            {{ local_scores.local_p_value[idx].toExponential(3) }}
-                          </v-chip>
-                        </td>
-                      </tr>
-                      </tbody>
-                    </template>
-                  </v-simple-table>
-                </v-row>
-              </v-container>
-            </v-col>
-            <v-col cols="4" :class="{'flex_content_center':mobile}">
-              <v-container>
-                <v-row justify="center">
-                  <span>
-                  Cluster<v-icon v-show="!cluster_scores" right style="top:-2px">mdi-cog fa-spin</v-icon>
-                    </span>
-                </v-row>
-                <v-row justify="center" v-if="cluster_scores">
-                  <v-simple-table>
-                    <template v-slot:default>
-                      <thead>
-                      <tr>
-                        <th v-for="h of Object.keys(cluster_scores)" :key="h">
-                          {{ h }}
-                        </th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      <tr v-for="idx in Object.keys(Object.values(cluster_scores)[0])"
-                          :key="'cluster'+idx">
-                        <td>{{ Object.values(Object.values(cluster_scores)[0])[idx] }}</td>
-                        <td>
-                          <v-chip dark small
-                                  :color="get_significance_color(Object.values(Object.values(cluster_scores)[1])[idx])">
-                            {{ Object.values(Object.values(cluster_scores)[1])[idx].toExponential(3) }}
-                          </v-chip>
-                        </td>
-                      </tr>
-                      </tbody>
-                    </template>
-                  </v-simple-table>
-                </v-row>
-              </v-container>
-            </v-col>
-            <v-col cols="4" :class="{'flex_content_center':mobile}">
-              <v-container>
-                <v-row justify="center">
-                  <span>
-                  Global<v-icon v-show="!global_scores" right style="top:-2px">mdi-cog fa-spin</v-icon>
-                    </span>
-                </v-row>
-
-                <v-row v-if="global_scores" justify="center">
-                  <v-simple-table>
-                    <template v-slot:default>
-                      <thead>
-                      <tr>
-                        <th v-for="h of Object.keys(global_scores[global_score_measure])" :key="h">
-                          {{ h }}
-                        </th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      <tr v-for="idx in Object.keys(Object.values(global_scores[global_score_measure])[0])"
-                          :key="'global'+idx">
-                        <td>{{ Object.values(Object.values(global_scores[global_score_measure])[0])[idx] }}</td>
-                        <td>
-                          <v-chip dark small
-                                  :color="get_significance_color(Object.values(Object.values(global_scores[global_score_measure])[1])[idx])">
-                            {{
-                              Object.values(Object.values(global_scores[global_score_measure])[1])[idx].toExponential(3)
-                            }}
-                          </v-chip>
-                        </td>
-                      </tr>
-                      </tbody>
-                    </template>
-                  </v-simple-table>
-                  <v-select style="max-width: 210px; min-width: 210px" outlined dense filled hide-details
-                            append-icon="mdi-menu-down"
-                            :items="Object.keys(global_scores).map(k=>{return{value:k, text:k}})"
-                            v-model="global_score_measure" label="Measure"></v-select>
-                </v-row>
-              </v-container>
-            </v-col>
-          </v-row>
-          <v-row justify="center" style="margin-bottom: 16px">
-            <v-col cols="10" class="flex_content_center">
-              <div style="width: 100%" v-if="network">
-                <drugst-one
-                    id='drugstone-component-id'
-                    :groups='getGroups()'
-                    :config='getConfig()'
-                    :network='getNetwork()'>
-                </drugst-one>
-              </div>
-            </v-col>
-          </v-row>
-        </v-container>
-
-      </template>
     </v-sheet>
     <v-snackbar v-model="notification.show" :multi-line="true" :timeout="notification.timeout"
                 color="warning" dark>
@@ -432,15 +372,21 @@ export default {
           text: 'Indication based'
         }]
       },
-      network1: undefined,
-      network2: undefined,
-      networkType: undefined,
+      network1: "disease_drug",
+      network2: "disease_gene",
+      networkType: "diseasome",
       network_ids: {
         'diseasome': [{value: 'MONDO', text: 'MONDO'}, {value: 'ICD10', text: 'ICD10'}],
         'drugome': [{value: 'DrugBank', text: 'DrugBank'}]
       },
-      network_id: undefined,
-      nodes: "",
+      network_id: 'MONDO',
+      nodes: "mondo.0004975\n" +
+          "mondo.0000437\n" +
+          "mondo.0007739\n" +
+          "mondo.0005180\n" +
+          "mondo.0004976\n" +
+          "mondo.0020128\n" +
+          "mondo.0005301",
       results: false,
       local_scores: undefined,
       global_score_measure: "empirical_p_values",
@@ -452,35 +398,35 @@ export default {
             "type": 'node',
             "color": "#ffbd8e",
             "font": {"color": "#f0f0f0"},
-            "groupName": "****",
+            "groupName": "<= 0.0001",
             "shape": "circle"
           },
           "***": {
             "type": 'node',
             "color": "#fac1c0",
             "font": {"color": "#f0f0f0"},
-            "groupName": "***",
+            "groupName": "<= 0.001",
             "shape": "circle"
           },
           "**": {
             "type": 'node',
             "color": "#e08ba5",
             "font": {"color": "#f0f0f0"},
-            "groupName": "**",
+            "groupName": "<= 0.01",
             "shape": "circle"
           },
           "*": {
             "type": 'node',
             "color": "#712081",
             "font": {"color": "#f0f0f0"},
-            "groupName": "*",
+            "groupName": "<= 0.05",
             "shape": "circle"
           },
-          "ns": {
+          "#": {
             "type": 'node',
             "color": "#2d105f",
             "font": {"color": "#f0f0f0"},
-            "groupName": "ns",
+            "groupName": "non-significant",
             "shape": "circle"
           },
           "missing": {
@@ -492,12 +438,12 @@ export default {
           },
         },
         "edgeGroups": {
-          "conserved": {"color": "#000000", "groupName": "Conserved"},
-          "non-conserved": {"color": "#000000", "groupName": "Non-conserved", "dashes": [2, 4]},
+          "conserved": {"color": "#000000", "groupName": "In both networks"},
+          "non-conserved": {"color": "#000000", "groupName": "In one network", "dashes": [2, 4]},
         }
       },
       networkConfig: {
-        "title": "Cluster visualization",
+        "title": "Cluster Similarity Visualization",
         "nodeShadow": true,
         "edgeShadow": true,
         "autofillEdges": false,
@@ -515,6 +461,7 @@ export default {
 
   created() {
     // this.$router.push("/configure")
+    this.checkEvent()
   },
 
   methods: {
@@ -534,12 +481,12 @@ export default {
     scrollDown: function (bool) {
       if (bool)
         setTimeout(() => {
-          window.scrollTo({top: 5000, behavior: 'smooth'})
+          // window.scrollTo({top: 5000, behavior: 'smooth'})
         }, 200)
     },
 
     get_significance_group: function (p_value) {
-      let group = 'ns'
+      let group = '#'
       if (p_value <= 0.0001) {
         group = '****'
       } else if (p_value <= 0.001) {
@@ -630,7 +577,7 @@ export default {
       //   this.scrollDown(true)
       // })
       // this.request_cluster_values(params)
-      this.scrollDown(true)
+      // this.scrollDown(true)
     },
 
     checkEvent: async function () {
@@ -658,7 +605,7 @@ export default {
     request_results: function (params, networks) {
       this.$http.get_local_scores(params).then(response => {
 
-        this.scrollDown(true)
+        // this.scrollDown(true)
         let names = {}
         Object.keys(response.node).forEach(nid => {
           names[nid] = 'D' + (Object.keys(names).length + 1)
@@ -677,10 +624,10 @@ export default {
       this.$http.get_global_scores(params).then(response => {
         this.global_scores = response
         this.global_score_measure = Object.keys(response)[0]
-        this.scrollDown(true)
-      })
+        // this.scrollDown(true)
+      }).catch(err => console.error(err))
       this.request_cluster_values(params)
-      this.scrollDown(true)
+      // this.scrollDown(true)
     },
 
     request_cluster_values: function (params) {
@@ -688,12 +635,12 @@ export default {
         console.log("Requesting cluster values")
         if (response.done || response.error) {
           this.cluster_scores = response.result
-          this.scrollDown(true)
+          // this.scrollDown(true)
         } else {
           setTimeout(() => this.request_cluster_values(params), 5000)
         }
 
-      })
+      }).catch(err => console.error(err))
     }
 
   },

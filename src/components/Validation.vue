@@ -16,26 +16,6 @@
       </div>
 
     </v-card>
-    <div style="display: flex; justify-content: center; margin-top: 32px;" v-if="step===0">
-      <v-subheader :style="{'font-size': mobile ? '1.4rem' : '1.5rem'}">What does GraphSimViz cover?
-      </v-subheader>
-    </div>
-    <div
-        style="width: 90%;text-align: justify; display: flex; justify-self: center; margin: 16px auto 16px;color: #484848">
-      <template v-if="step===0">
-        <div style="display: flex; justify-content: center; width: 100%">
-          <v-img eager :src="getIllustration()"
-                 :max-width="mobile ? '90%' : '70%'"></v-img>
-        </div>
-      </template>
-    </div>
-    <div v-if="step===0">
-      <v-divider></v-divider>
-      <div style="display: flex; justify-content: center; margin-top:32px">
-        <v-subheader :style="{'font-size': mobile ? '1.4rem' : '1.5rem'}">Evaluate now!
-        </v-subheader>
-      </div>
-    </div>
     <Configuration v-if="step===0" @resetEvent="resetValidation" :mode="params.mode" :mobile="mobile"
                    @validationEvent="validate"></Configuration>
   </div>
