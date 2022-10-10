@@ -3,7 +3,8 @@
     <div v-bind:class="{flex:!mobile}">
     </div>
     <v-sheet style="margin-top: 16px;">
-      <div style="border:#858585 solid thin; border-radius: 16px; width: 90%; display: flex; align-self: center; margin-left: auto; margin-right: auto">
+      <div id="result-box"
+           style="border:#858585 solid thin; border-radius: 16px; width: 90%; display: flex; align-self: center; margin-left: auto; margin-right: auto">
         <template v-if="results">
           <v-container style="margin-top: 16px" v-if="results">
             <v-row justify="center" style="margin-bottom: 16px">
@@ -18,16 +19,17 @@
                 </div>
               </v-col>
             </v-row>
+            <!--            <v-divider></v-divider>-->
             <v-row justify="center" justify-md="start">
-              <v-col cols="4" :class="{'flex_content_center':mobile}">
+              <v-col cols="6" :class="{'flex_content_center':mobile}">
                 <v-container>
                   <v-row justify="center">
                   <span style="color: #858585">
-                  <b>Local</b><v-icon v-show="!local_scores" right style="top:-2px">mdi-cog fa-spin</v-icon>
+                  <b>Local empirical P-value</b><v-icon v-show="!local_scores" right style="top:-2px">mdi-cog fa-spin</v-icon>
                     </span>
                   </v-row>
                   <v-row justify="center" v-if="local_scores">
-                    <v-simple-table max-height="400px" dense>
+                    <v-simple-table max-height="400px" dense style="margin-top: 8px">
                       <template v-slot:default>
                         <thead>
                         <tr>
@@ -38,7 +40,7 @@
                             Node
                           </th>
                           <th>
-                            Local p-value
+                            <span style="padding-left: 10px">P-value</span>
                           </th>
                         </tr>
                         </thead>
@@ -64,137 +66,87 @@
                   <v-row justify="center">
                   <span style="color: #858585">
                   <b>
-                  Cluster</b><v-icon v-show="!cluster_scores" right style="top:-2px">mdi-cog fa-spin</v-icon>
+                  Cluster-level empirical P-value</b><v-icon v-show="!cluster_scores" right
+                                                             style="top:-2px">mdi-cog fa-spin</v-icon>
                     </span>
                   </v-row>
                   <v-row justify="center" v-if="cluster_scores">
-                    <v-simple-table dense>
-                      <template v-slot:default>
-                        <thead>
-                        <tr>
-                          <th v-for="h of Object.keys(cluster_scores)" :key="h">
-                            {{ h }}
-                          </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr v-for="idx in Object.keys(Object.values(cluster_scores)[0])"
-                            :key="'cluster'+idx">
-                          <td>{{ Object.values(Object.values(cluster_scores)[0])[idx] }}</td>
-                          <td>
-                            <v-chip dark small
-                                    :color="get_significance_color(Object.values(Object.values(cluster_scores)[1])[idx])">
-                              {{ Object.values(Object.values(cluster_scores)[1])[idx].toExponential(3) }}
-                            </v-chip>
-                          </td>
-                        </tr>
-                        </tbody>
-                      </template>
-                    </v-simple-table>
+                    <v-chip dark small style="margin-top: 8px"
+                            :color="get_significance_color(Object.values(Object.values(cluster_scores)[1])[Object.values(Object.values(cluster_scores)[0]).indexOf(ged_variant)])">
+                      {{
+                        Object.values(Object.values(cluster_scores)[1])[Object.values(Object.values(cluster_scores)[0]).indexOf(ged_variant)].toExponential(3)
+                      }}
+                    </v-chip>
                   </v-row>
-                </v-container>
-              </v-col>
-              <v-col cols="4" :class="{'flex_content_center':mobile}">
-                <v-container>
-                  <v-row justify="center">
+                  <v-row justify="center" style="margin-top: 64px">
                   <span style="color: #858585">
                   <b>
-                  Global</b><v-icon v-show="!global_scores" right style="top:-2px">mdi-cog fa-spin</v-icon>
+                  Global empirical P-value</b><v-icon v-show="!global_scores" right
+                                                      style="top:-2px">mdi-cog fa-spin</v-icon>
                     </span>
                   </v-row>
 
                   <v-row v-if="global_scores" justify="center">
-                    <v-simple-table dense>
-                      <template v-slot:default>
-                        <thead>
-                        <tr>
-                          <th v-for="h of Object.keys(global_scores[global_score_measure])" :key="h">
-                            {{ h }}
-                          </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr v-for="idx in Object.keys(Object.values(global_scores[global_score_measure])[0])"
-                            :key="'global'+idx">
-                          <td>{{ Object.values(Object.values(global_scores[global_score_measure])[0])[idx] }}</td>
-                          <td>
-                            <v-chip dark small
-                                    :color="get_significance_color(Object.values(Object.values(global_scores[global_score_measure])[1])[idx])">
-                              {{
-                                Object.values(Object.values(global_scores[global_score_measure])[1])[idx].toExponential(3)
-                              }}
-                            </v-chip>
-                          </td>
-                        </tr>
-                        </tbody>
-                      </template>
-                    </v-simple-table>
-<!--                    <v-select style="max-width: 210px; min-width: 210px" outlined dense filled hide-details-->
-<!--                              append-icon="mdi-menu-down"-->
-<!--                              :items="Object.keys(global_scores).map(k=>{return{value:k, text:k}})"-->
-<!--                              v-model="global_score_measure" label="Measure"></v-select>-->
+                    <v-chip dark small style="margin-top: 8px"
+                            :color="get_significance_color(Object.values(Object.values(global_scores)[1])[Object.values(Object.values(global_scores)[0]).indexOf(ged_variant)])">
+                      {{
+                        Object.values(Object.values(global_scores)[1])[Object.values(Object.values(global_scores)[0]).indexOf(ged_variant)].toExponential(3)
+                      }}
+                    </v-chip>
+                  </v-row>
+                  <v-row justify="center" style="margin-top: 64px">
+                    <v-select v-if="global_scores"
+                              label="GED Variant" dense
+                              :items="Object.values(Object.values(global_scores)[0]).map(k=>{return{text: map_names(k), value:k}})"
+                              style="max-width: 250px" append-icon="mdi-menu-down" v-model="ged_variant">
+
+                    </v-select>
                   </v-row>
                 </v-container>
               </v-col>
+              <!--              <v-col cols="4" :class="{'flex_content_center':mobile}">-->
+              <!--               -->
+              <!--              </v-col>-->
             </v-row>
           </v-container>
 
         </template>
       </div>
-      <div style="display: flex; justify-content: center">
-        <v-subheader :class="{sh_mobile:mobile, sh:!mobile}">
-          1. Network type
-        </v-subheader>
-      </div>
-      <v-container :class="{border_mobile:mobile, border:!mobile}">
-        <v-row justify="center">
-          <v-col cols="12" lg="4" :class="{'flex_content_center':mobile}">
-            <v-container style="padding-top: 16px">
-              <v-row justify="center" justify-lg="start">
-                <v-col cols="12" md="6" lg="12" class="flex_content_center">
-                  <v-select label="Network type" :items="networkTypes"
-                            v-model="networkType" append-icon="mdi-menu-down"
-                            style="max-width: 210px; min-width: 210px" outlined dense filled hide-details
-                            @change="scrollDown(true)">
-                    <template v-slot:append-outer>
-                      <v-tooltip right>
-                        <template v-slot:activator="{on, attrs}">
-                          <v-icon v-bind="attrs" v-on="on">far fa-question-circle</v-icon>
-                        </template>
-                        <div style="width: 250px; text-align: justify">
-                          TODO tooltip
-                        </div>
-                      </v-tooltip>
-                    </template>
-                  </v-select>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-col>
-        </v-row>
-      </v-container>
-      <v-divider></v-divider>
-      <template v-if="networkType && networkType !== 'drug-disease'">
-        <div style="display: flex; justify-content: center">
-          <v-subheader :class="{sh_mobile:mobile, sh:!mobile}">2. Specify Network Sources</v-subheader>
-        </div>
-        <!--        <v-alert v-if="errorNetworkFormat" type="error" dense>Network format is not of accepted type (.sif, .gt,-->
-        <!--          .graphml)!-->
-        <!--        </v-alert>-->
-        <!--        <v-alert v-if="errorNetworkIDType" type="error" dense>Missing node id type definition!</v-alert>-->
-        <!--        <v-alert v-if="errorNetworkNodeName" type="error" dense>Missing node attribute name!</v-alert>-->
-        <v-container style="margin-bottom: 32px">
-          <v-row>
-            <v-col class="flex_content_center">
-              <v-container>
-                <v-row style="margin: 8px" justify="center">
-                  <v-col>
+      <div style="width: 100%">
+        <v-container :class="{border_mobile:mobile, border:!mobile}">
+          <v-row justify="center">
+
+            <v-col cols="6" lg="6" :class="{'flex_content_center':mobile}">
+              <div style="display: flex; justify-content: center">
+                <v-subheader :class="{sh_mobile:mobile, sh:!mobile}">
+                  1. Network type
+                </v-subheader>
+              </div>
+              <v-container style="padding-top: 16px">
+                <v-row justify="center" justify-lg="start">
+                  <v-col cols="12" md="6" lg="12" class="flex_content_center">
+                    <v-radio-group v-model="networkType">
+                      <v-radio v-for="t of networkTypes" :key="'nw_'+t.value" :label="t.text" :value="t.value">
+                      </v-radio>
+                    </v-radio-group>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-col>
+            <v-divider vertical style="margin-top: 16px; margin-bottom: 16px" v-if="networkType && networkType !== 'drug-disease'"></v-divider>
+            <v-col cols="6" lg="6" :class="{'flex_content_center':mobile}"
+                   v-if="networkType && networkType !== 'drug-disease'">
+              <div style="display: flex; justify-content: center">
+                <v-subheader :class="{sh_mobile:mobile, sh:!mobile}">2. Specify Network Sources</v-subheader>
+              </div>
+              <v-container style="padding-top: 16px">
+                <v-row justify="center" justify-lg="start">
+                  <v-col cols="12" md="5" lg="5" class="flex_content_center">
                     <v-select label="Network 1"
                               :items="networks[networkType].filter(e=> network2 == null || e.value !== network2)"
                               v-model="network1"
                               append-icon="mdi-menu-down"
-                              style="max-width: 210px; min-width: 210px" outlined dense filled hide-details
-                              @change="scrollDown(network1 && network2)">
+                              style="max-width: 210px; min-width: 210px" dense hide-details>
                       <template v-slot:append-outer>
                         <v-tooltip right>
                           <template v-slot:activator="{on, attrs}">
@@ -207,22 +159,15 @@
                       </template>
                     </v-select>
                   </v-col>
-                </v-row>
-              </v-container>
-            </v-col>
-            <v-col cols="1" class="flex_content_center">
-              <v-divider vertical></v-divider>
-            </v-col>
-            <v-col class="flex_content_center">
-              <v-container>
-                <v-row style="margin: 8px" justify="center">
-                  <v-col>
+                  <v-col cols="1" class="flex_content_center">
+                    <v-divider vertical></v-divider>
+                  </v-col>
+                  <v-col cols="12" md="5" lg="5" class="flex_content_center">
                     <v-select label="Network 2"
                               :items="networks[networkType].filter(e=> network1 == null || e.value !== network1)"
                               v-model="network2"
                               append-icon="mdi-menu-down"
-                              style="max-width: 210px; min-width: 210px" outlined dense filled hide-details
-                              @change="scrollDown(network1 && network2)">
+                              style="max-width: 210px; min-width: 210px" dense hide-details>
                       <template v-slot:append-outer>
                         <v-tooltip right>
                           <template v-slot:activator="{on, attrs}">
@@ -238,90 +183,87 @@
                 </v-row>
               </v-container>
             </v-col>
+
           </v-row>
         </v-container>
-        <v-divider></v-divider>
-      </template>
-      <template v-if="network2 && network1">
-        <div style="display: flex; justify-content: center">
-          <v-subheader :class="{sh_mobile:mobile, sh:!mobile}">3. Nodes</v-subheader>
+        <v-divider style="margin-left: 32px; margin-right: 32px"></v-divider>
+
+        <template v-if="network2 && network1">
+          <div style="display: flex; justify-content: center">
+            <v-subheader :class="{sh_mobile:mobile, sh:!mobile}">3. Nodes</v-subheader>
+          </div>
+          <v-container :class="{border_mobile:mobile, border:!mobile}">
+            <!--        <v-alert v-if="errorSigCont" type="error" dense>Define a list of entries for significance contribution (max 100-->
+            <!--          entries).-->
+            <!--        </v-alert>-->
+            <v-row justify="center">
+              <v-col cols="4" md="12">
+                <div>
+                  <v-container>
+                    <v-row>
+                      <v-col cols="8">
+                        <v-select label="ID Space" append-icon="mdi-menu-down"
+                                  :items="network1.indexOf('comorbidity') > -1 || network2.indexOf('comorbidity')> -1? [{value: 'ICD10', text: 'ICD10'}] : network_ids[networkType]"
+                                  v-model="network_id"
+                                  style="max-width: 210px; min-width: 210px" dense hide-details
+                        >
+                          <template v-slot:append-outer>
+                            <v-tooltip right>
+                              <template v-slot:activator="{on, attrs}">
+                                <v-icon v-bind="attrs" v-on="on">far fa-question-circle</v-icon>
+                              </template>
+                              <div style="width: 250px; text-align: justify">
+                                TODO tooltip
+                              </div>
+                            </v-tooltip>
+                          </template>
+                        </v-select>
+                      </v-col>
+                      <v-col cols=4 class="flex_content_end">
+                        <v-btn outlined
+                               @click="nodes = 'mondo.0004975\nmondo.0000437\nmondo.0007739\nmondo.0005180\nmondo.0004976\nmondo.0020128\nmondo.0005301'">
+                          <v-icon left>mdi-download-multiple</v-icon>
+                          Example
+                        </v-btn>
+                      </v-col>
+                    </v-row>
+                    <v-row justify="center" justify-md="start">
+                      <v-col cols="12" :class="{'flex_content_center':mobile}">
+                        <v-textarea label="Node IDs"
+                                    v-model="nodes"
+                                    :class="{ 'ta_mobile':mobile }"
+                                    no-resize
+                                    outlined
+                                    placeholder="Enter your chosen IDs newline separated...">
+                          <!--                        <template v-slot:append>-->
+                          <!--                          <v-tooltip right>-->
+                          <!--                            <template v-slot:activator="{on, attrs}">-->
+                          <!--                              <v-icon style="top: -14px;right:-10px; margin-left: -21px" v-bind="attrs" v-on="on">far-->
+                          <!--                                fa-question-circle-->
+                          <!--                              </v-icon>-->
+                          <!--                            </template>-->
+                          <!--                            <div style="width: 250px; text-align: justify">-->
+                          <!--                              Manually add IDs newline separated.-->
+                          <!--                            </div>-->
+                          <!--                          </v-tooltip>-->
+                          <!--                        </template>-->
+                        </v-textarea>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </div>
+              </v-col>
+            </v-row>
+          </v-container>
+          <v-divider style="margin-left: 32px; margin-right: 32px"></v-divider>
+        </template>
+        <div style="display: flex; margin:8px">
+          <v-btn color="primary" @click="checkEvent(true)" :disabled="!(network1 && network2 && network_id)"
+                 style="margin-left: auto; margin-right: auto; justify-self: center">
+            Visualize
+            <v-icon right>mdi-chevron-right</v-icon>
+          </v-btn>
         </div>
-        <v-container :class="{border_mobile:mobile, border:!mobile}">
-          <!--        <v-alert v-if="errorSigCont" type="error" dense>Define a list of entries for significance contribution (max 100-->
-          <!--          entries).-->
-          <!--        </v-alert>-->
-          <v-row justify="center">
-            <v-col cols="4" md="12">
-              <div>
-                <v-container style="margin-top: 16px">
-                  <v-row style="margin: 8px" justify="center">
-                    <v-col class="flex_content_center">
-                      <v-select label="ID Space" append-icon="mdi-menu-down"
-                                :items="network1.indexOf('comorbidity') > -1 || network2.indexOf('comorbidity')> -1? [{value: 'ICD10', text: 'ICD10'}] : network_ids[networkType]"
-                                v-model="network_id"
-                                style="max-width: 210px; min-width: 210px" outlined dense filled hide-details
-                      >
-                        <template v-slot:append-outer>
-                          <v-tooltip right>
-                            <template v-slot:activator="{on, attrs}">
-                              <v-icon v-bind="attrs" v-on="on">far fa-question-circle</v-icon>
-                            </template>
-                            <div style="width: 250px; text-align: justify">
-                              TODO tooltip
-                            </div>
-                          </v-tooltip>
-                        </template>
-                      </v-select>
-                    </v-col>
-                    <!--                  </v-col>-->
-                  </v-row>
-                  <v-row justify="center" justify-md="start" v-if="network_id==='MONDO'">
-                    <v-btn
-                        @click="nodes = 'mondo.0004975\nmondo.0000437\nmondo.0007739\nmondo.0005180\nmondo.0004976\nmondo.0020128\nmondo.0005301'">
-                      Example
-                    </v-btn>
-                  </v-row>
-                  <v-row justify="center" justify-md="start">
-                    <v-col cols="12" :class="{'flex_content_center':mobile}">
-                      <v-textarea label="Node IDs"
-                                  v-model="nodes"
-                                  :class="{ 'ta_mobile':mobile }"
-                                  no-resize
-                                  filled
-                                  placeholder="Enter your chosen IDs newline separated...">
-                        <template v-slot:append>
-                          <v-tooltip right>
-                            <template v-slot:activator="{on, attrs}">
-                              <v-icon style="top: -14px;right:-10px; margin-left: -21px" v-bind="attrs" v-on="on">far
-                                fa-question-circle
-                              </v-icon>
-                            </template>
-                            <div style="width: 250px; text-align: justify">
-                              Manually add IDs newline separated.
-                            </div>
-                          </v-tooltip>
-                        </template>
-                      </v-textarea>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </div>
-            </v-col>
-          </v-row>
-        </v-container>
-        <v-divider></v-divider>
-      </template>
-      <div style="display: flex; margin:8px">
-        <v-btn color="primary" @click="checkEvent" :disabled="!(network1 && network2 && network_id)"
-               style="margin-left: auto; margin-right: auto; justify-self: center">
-          Visualize
-          <v-icon right>mdi-chevron-right</v-icon>
-        </v-btn>
-        <!--        <v-btn color="primary" @click="load_neighbors" :disabled="!network"-->
-        <!--               style="margin-left: auto; margin-right: auto; justify-self: center">-->
-        <!--          Fist neighbor Network-->
-        <!--          <v-icon right>mdi-chevron-right</v-icon>-->
-        <!--        </v-btn>-->
       </div>
     </v-sheet>
     <v-snackbar v-model="notification.show" :multi-line="true" :timeout="notification.timeout"
@@ -389,9 +331,9 @@ export default {
           "mondo.0005301",
       results: false,
       local_scores: undefined,
-      global_score_measure: "empirical_p_values",
       cluster_scores: undefined,
       global_scores: undefined,
+      ged_variant: 'normalized_scores',
       groupConfig: {
         "nodeGroups": {
           "****": {
@@ -455,13 +397,19 @@ export default {
         "showNetworkMenuButtonAdjacentDisordersProteins": false,
         "showNetworkMenuButtonAdjacentDisordersDrugs": false
       },
-      network: undefined
+      name_map: {
+        'normalized_scores': 'Uniform edit costs',
+        'normalized_ranks': 'Rank-based edit costs',
+        'topology_only': 'Weight-based edit costs'
+      },
+      network: undefined,
+      mwu: false,
     }
   },
 
   created() {
     // this.$router.push("/configure")
-    this.checkEvent()
+    this.checkEvent(false)
   },
 
   methods: {
@@ -478,11 +426,18 @@ export default {
       return JSON.stringify(this.network)
     },
 
-    scrollDown: function (bool) {
+    scrollUp: function (bool) {
       if (bool)
         setTimeout(() => {
-          // window.scrollTo({top: 5000, behavior: 'smooth'})
-        }, 200)
+          window.scrollTo({top: document.getElementById('result-box').offsetTop, behavior: 'smooth'})
+        }, 100)
+    },
+
+    map_names: function (key) {
+      if (this.name_map[key])
+        return this.name_map[key]
+      return key
+
     },
 
     get_significance_group: function (p_value) {
@@ -570,17 +525,9 @@ export default {
         this.request_results(params, response)
         // this.convertNetworks(params, response)
       }).catch(err => console.error(err))
-
-      // this.$http.get_global_scores(params).then(response => {
-      //   this.global_scores = response
-      //   this.global_score_measure = Object.keys(response)[0]
-      //   this.scrollDown(true)
-      // })
-      // this.request_cluster_values(params)
-      // this.scrollDown(true)
     },
 
-    checkEvent: async function () {
+    checkEvent: async function (loaded) {
       let params = {
         'network_type1': this.network1,
         'network_type2': this.network2,
@@ -598,14 +545,13 @@ export default {
 
       this.results = true
 
-      this.request_results(params)
+      this.request_results(params, undefined, loaded)
 
     },
 
-    request_results: function (params, networks) {
+    request_results: function (params, networks, loaded) {
       this.$http.get_local_scores(params).then(response => {
 
-        // this.scrollDown(true)
         let names = {}
         Object.keys(response.node).forEach(nid => {
           names[nid] = 'D' + (Object.keys(names).length + 1)
@@ -619,15 +565,16 @@ export default {
             this.convertNetworks(params, response)
           }).catch(console.error)
         }
+
+        this.scrollUp(loaded)
       }).catch(err => console.error(err))
 
       this.$http.get_global_scores(params).then(response => {
-        this.global_scores = response
-        this.global_score_measure = Object.keys(response)[0]
-        // this.scrollDown(true)
+        let global_score_measure = this.mwu ? 'mwu_p_values' : 'empirical_p_values'
+        this.global_scores = response[global_score_measure]
+
       }).catch(err => console.error(err))
       this.request_cluster_values(params)
-      // this.scrollDown(true)
     },
 
     request_cluster_values: function (params) {
@@ -635,7 +582,6 @@ export default {
         console.log("Requesting cluster values")
         if (response.done || response.error) {
           this.cluster_scores = response.result
-          // this.scrollDown(true)
         } else {
           setTimeout(() => this.request_cluster_values(params), 5000)
         }
@@ -687,6 +633,10 @@ export default {
   justify-content: center
   display: flex
 
+.flex_content_end
+  justify-content: end
+  display: flex
+
 .example_div_width
   width: 100%
   display: flex
@@ -724,4 +674,9 @@ export default {
 .margin_mobile
   padding-left: 8px
   padding-right: 8px
+
+
+td
+  border-style: hidden !important
+
 </style>
