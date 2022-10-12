@@ -1,5 +1,5 @@
 //TODO replace host
-const HOST = "graphvizsim-api.zbh.uni-hamburg.de"
+const HOST = "api.graphsimviz.net"
 export const CONTEXT_PATH="/"
 // export const BACKEND_PORT= "8080"
 export const HOST_URL = "http://" + HOST //+ ":" + BACKEND_PORT
