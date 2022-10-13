@@ -108,9 +108,6 @@
                   </v-row>
                 </v-container>
               </v-col>
-              <!--              <v-col cols="4" :class="{'flex_content_center':mobile}">-->
-              <!--               -->
-              <!--              </v-col>-->
             </v-row>
           </v-container>
 
@@ -123,7 +120,7 @@
             <v-col cols="12" lg="4" :class="{'flex_content_center':mobile}">
               <div style="display: flex; justify-content: center">
                 <v-subheader :class="{sh_mobile:mobile, sh:!mobile}">
-                  1. Network type
+                  1. Network
                 </v-subheader>
               </div>
               <v-container style="padding-top: 16px">
