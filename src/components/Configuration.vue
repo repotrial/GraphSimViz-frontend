@@ -26,7 +26,9 @@
                   <v-row justify="center">
                   <span style="color: #858585">
                   <b>Local empirical P-values</b><v-icon v-if="!local_scores" right
-                                                         style="top:-2px">mdi-cog fa-spin</v-icon><v-btn @click="downloadLocal()" v-else icon right small><v-icon style="top:-2px">mdi-download</v-icon></v-btn>
+                                                         style="top:-2px">mdi-cog fa-spin</v-icon><v-btn
+                      @click="downloadLocal()" v-else icon right small><v-icon
+                      style="top:-2px">mdi-download</v-icon></v-btn>
                     </span>
                   </v-row>
                   <v-row justify="center" v-if="local_scores">
@@ -68,7 +70,9 @@
                   <span style="color: #858585">
                   <b>
                   Cluster-level P-value{{ mwu ? ' (MWU)' : '' }}</b><v-icon v-if="!cluster_scores" right
-                                                                            style="top:-2px">mdi-cog fa-spin</v-icon><v-btn @click="downloadCluster(mwu)" v-else icon right small><v-icon style="top:-2px">mdi-download</v-icon></v-btn>
+                                                                            style="top:-2px">mdi-cog fa-spin</v-icon><v-btn
+                      @click="downloadCluster(mwu)" v-else icon right small><v-icon
+                      style="top:-2px">mdi-download</v-icon></v-btn>
                     </span>
                   </v-row>
                   <v-row justify="center" v-if="cluster_scores">
@@ -86,7 +90,9 @@
                   <span style="color: #858585">
                   <b>
                   Global empirical P-value{{ mwu ? ' (MWU)' : '' }}</b><v-icon v-if="!global_scores" right
-                                                                               style="top:-2px">mdi-cog fa-spin</v-icon><v-btn @click="downloadGlobal(mwu)" v-else icon right small><v-icon style="top:-2px">mdi-download</v-icon></v-btn>
+                                                                               style="top:-2px">mdi-cog fa-spin</v-icon><v-btn
+                      @click="downloadGlobal(mwu)" v-else icon right small><v-icon
+                      style="top:-2px">mdi-download</v-icon></v-btn>
                     </span>
                   </v-row>
 
@@ -99,18 +105,30 @@
                     </v-chip>
                   </v-row>
                   <v-row justify="center" style="margin-top: 64px">
-                    <v-select v-if="global_scores"
-                              label="GED Variant" dense
+                    <v-select v-if="global_scores" dense
                               :items="Object.values(Object.values(global_scores)[0]).map(k=>{return{text: map_names(k), value:k}})"
                               style="max-width: 250px" append-icon="mdi-menu-down" v-model="ged_variant">
-
+                      <template v-slot:label>
+                        <v-tooltip right>
+                          <template v-slot:activator="{on, attrs}">
+                            GED Variant
+                            <v-icon v-bind="attrs" v-on="on" small right style="top: -2px">far fa-question-circle
+                            </v-icon>
+                          </template>
+                          <div style="width: 300px; text-align: justify">
+                            For Diseasome and Drugome comparisons three graph edit distance variants can be displayed:<br>
+                            <b>Uniform edit costs:</b> Score normalized<br>
+                            <b>Rank-based edit costs:</b> Rank normalized<br>
+                            <b>Weight-based edit costs:</b> Topology only
+                          </div>
+                        </v-tooltip>
+                      </template>
                     </v-select>
                   </v-row>
                 </v-container>
               </v-col>
             </v-row>
           </v-container>
-
         </template>
       </div>
       <div style="width: 100%">
@@ -119,16 +137,32 @@
 
             <v-col cols="12" lg="4" :class="{'flex_content_center':mobile}">
               <div style="display: flex; justify-content: center">
-                <v-subheader :class="{sh_mobile:mobile, sh:!mobile}">
+                <v-subheader :class="{sh_mobile:mobile, sh:!mobile}" style="margin-bottom: 0; padding-bottom: 0">
                   1. Network
                 </v-subheader>
               </div>
               <v-container style="padding-top: 16px">
                 <v-row justify="start" justify-lg="center">
                   <v-col class="flex_content_center">
-                    <v-radio-group v-model="networkType" @change="unsetConfig(2)" dense label="General network">
+                    <v-radio-group v-model="networkType" @change="unsetConfig(2)" dense
+                                   style="margin-top: 0; padding-top: 0">
                       <v-radio v-for="t of networkTypes" :key="'nw_'+t.value" :label="t.text" :value="t.value">
                       </v-radio>
+                      <template v-slot:label>
+                        <v-tooltip right>
+                          <template v-slot:activator="{on, attrs}">
+                            General network
+                            <v-icon style="top: -2px" small right v-bind="attrs" v-on="on">far fa-question-circle
+                            </v-icon>
+                          </template>
+                          <div style="width: 350px; text-align: justify">
+                            Select the general network type to be compared:<br>
+                            <b>Diseasome:</b> Disease-Disease networks<br>
+                            <b>Drugome:</b> Drug-Drug networks<br>
+                            <b>Drug-Disease Network</b>
+                          </div>
+                        </v-tooltip>
+                      </template>
                     </v-radio-group>
                   </v-col>
                 </v-row>
@@ -137,64 +171,60 @@
             <v-divider vertical style="margin-top: 16px; margin-bottom: 16px"></v-divider>
             <v-col cols="12" lg="8" :class="{'flex_content_center':mobile}">
               <div style="display: flex; justify-content: center">
-                <v-subheader :class="{sh_mobile:mobile, sh:!mobile}">2. Edges</v-subheader>
+                <v-subheader :class="{sh_mobile:mobile, sh:!mobile}" style="margin-bottom: 0; padding-bottom: 0">2.
+                  Edges
+                </v-subheader>
               </div>
               <v-container style="padding-top: 16px">
                 <v-row justify="center" justify-lg="start">
                   <v-col cols="12" md="5" lg="5" class="flex_content_center">
-                    <!--                    <v-select label="Network 1"-->
-                    <!--                              @change="unsetConfig(3)"-->
-                    <!--                              :items="networks[networkType].filter(e=> network2 == null || e.value !== network2)"-->
-                    <!--                              v-model="network1"-->
-                    <!--                              append-icon="mdi-menu-down" :disabled="!networkType || networkType === 'drug-disease'"-->
-                    <!--                              style="max-width: 210px; min-width: 210px" dense hide-details>-->
-                    <!--                      <template v-slot:append-outer>-->
-                    <!--                        <v-tooltip right>-->
-                    <!--                          <template v-slot:activator="{on, attrs}">-->
-                    <!--                            <v-icon v-bind="attrs" v-on="on">far fa-question-circle</v-icon>-->
-                    <!--                          </template>-->
-                    <!--                          <div style="width: 250px; text-align: justify">-->
-                    <!--                            TODO tooltip-->
-                    <!--                          </div>-->
-                    <!--                        </v-tooltip>-->
-                    <!--                      </template>-->
-                    <!--                    </v-select>-->
-                    <v-radio-group v-model="network1" @change="unsetConfig(3)" dense label="Network 1">
+                    <v-radio-group v-model="network1" @change="unsetConfig(3)" dense
+                                   style="margin-top: 0; padding-top: 0">
                       <v-radio
                           v-for="t of networks[networkType].filter(e=> networks[networkType].length >2 || (network2 == null || e.value !== network2))"
                           :key="'nw1_'+t.value" :label="t.text" :value="t.value"
                           :disabled="network2 && t.value === network2">
                       </v-radio>
+                      <template v-slot:label>
+                        <v-tooltip right>
+                          <template v-slot:activator="{on, attrs}">
+                            Network 1
+                            <v-icon style="top: -2px" small right v-bind="attrs" v-on="on">far fa-question-circle
+                            </v-icon>
+                          </template>
+                          <div style="width: 250px; text-align: justify">
+                            Select an entity on which network 1 will be constructed on. An edge will be generated if two
+                            nodes in the main network share a connection to an entry of the selected type.
+                          </div>
+                        </v-tooltip>
+                      </template>
                     </v-radio-group>
                   </v-col>
                   <v-col cols="1" class="flex_content_center">
                     <v-divider vertical></v-divider>
                   </v-col>
                   <v-col cols="12" md="5" lg="5" class="flex_content_center">
-                    <v-radio-group v-model="network2" @change="unsetConfig(3)" dense label="Network 2">
+                    <v-radio-group v-model="network2" @change="unsetConfig(3)" dense
+                                   style="margin-top: 0; padding-top: 0">
                       <v-radio
                           v-for="t of networks[networkType].filter(e=> networks[networkType].length >2 || (network1 == null || e.value !== network1))"
                           :key="'nw2_'+t.value" :label="t.text" :value="t.value"
                           :disabled="network1 && t.value === network1">
                       </v-radio>
+                      <template v-slot:label>
+                        <v-tooltip right>
+                          <template v-slot:activator="{on, attrs}">
+                            Network 2
+                            <v-icon style="top: -2px" small right v-bind="attrs" v-on="on">far fa-question-circle
+                            </v-icon>
+                          </template>
+                          <div style="width: 250px; text-align: justify">
+                            Select an entity on which network 2 will be constructed on. An edge will be generated if two
+                            nodes in the main network share a connection to an entry of the selected type.
+                          </div>
+                        </v-tooltip>
+                      </template>
                     </v-radio-group>
-                    <!--                    <v-select label="Network 2"-->
-                    <!--                              @change="unsetConfig(3)"-->
-                    <!--                              :items="networks[networkType].filter(e=> network1 == null || e.value !== network1)"-->
-                    <!--                              v-model="network2"-->
-                    <!--                              append-icon="mdi-menu-down" :disabled="!networkType || networkType === 'drug-disease'"-->
-                    <!--                              style="max-width: 210px; min-width: 210px" dense hide-details>-->
-                    <!--                      <template v-slot:append-outer>-->
-                    <!--                        <v-tooltip right>-->
-                    <!--                          <template v-slot:activator="{on, attrs}">-->
-                    <!--                            <v-icon v-bind="attrs" v-on="on">far fa-question-circle</v-icon>-->
-                    <!--                          </template>-->
-                    <!--                          <div style="width: 250px; text-align: justify">-->
-                    <!--                            TODO tooltip-->
-                    <!--                          </div>-->
-                    <!--                        </v-tooltip>-->
-                    <!--                      </template>-->
-                    <!--                    </v-select>-->
                   </v-col>
                 </v-row>
               </v-container>
@@ -215,19 +245,21 @@
                   <v-container>
                     <v-row>
                       <v-col cols=12 md=8>
-                        <v-select :label="(networkType === 'diseasome' ? 'Disease ':'Drug ') +'ID Space'"
-                                  append-icon="mdi-menu-down"
-                                  :items="(network1 && network2 && (network1.indexOf('comorbidity') > -1 || network2.indexOf('comorbidity')> -1))? [{value: 'ICD10', text: 'ICD10'}] : network_ids[networkType]"
-                                  v-model="network_id" @change="unsetConfig(4)"
-                                  style="max-width: 210px; min-width: 210px" dense hide-details
+                        <v-select
+                            append-icon="mdi-menu-down"
+                            :items="(network1 && network2 && (network1.indexOf('comorbidity') > -1 || network2.indexOf('comorbidity')> -1))? [{value: 'ICD10', text: 'ICD10'}] : network_ids[networkType]"
+                            v-model="network_id" @change="unsetConfig(4)"
+                            style="max-width: 210px; min-width: 210px" dense hide-details
                         >
-                          <template v-slot:append-outer>
+                          <template v-slot:label>
                             <v-tooltip right>
                               <template v-slot:activator="{on, attrs}">
-                                <v-icon v-bind="attrs" v-on="on">far fa-question-circle</v-icon>
+                                {{ (networkType === 'diseasome' ? 'Disease ' : 'Drug ') + 'ID Space' }}
+                                <v-icon v-bind="attrs" v-on="on" small right style="top: -2px">far fa-question-circle
+                                </v-icon>
                               </template>
                               <div style="width: 250px; text-align: justify">
-                                TODO tooltip
+                                Select the ID space in which you want to define entries.
                               </div>
                             </v-tooltip>
                           </template>
@@ -243,25 +275,25 @@
                     </v-row>
                     <v-row justify="center" justify-md="start">
                       <v-col cols="12" md=12 :class="{'flex_content_center':mobile}">
-                        <v-textarea label="Node IDs"
-                                    v-model="nodes"
-                                    :class="{ 'ta_mobile':mobile }"
-                                    no-resize
-                                    :disabled="!network_id"
-                                    outlined
-                                    placeholder="Enter your chosen IDs newline separated...">
-                          <!--                        <template v-slot:append>-->
-                          <!--                          <v-tooltip right>-->
-                          <!--                            <template v-slot:activator="{on, attrs}">-->
-                          <!--                              <v-icon style="top: -14px;right:-10px; margin-left: -21px" v-bind="attrs" v-on="on">far-->
-                          <!--                                fa-question-circle-->
-                          <!--                              </v-icon>-->
-                          <!--                            </template>-->
-                          <!--                            <div style="width: 250px; text-align: justify">-->
-                          <!--                              Manually add IDs newline separated.-->
-                          <!--                            </div>-->
-                          <!--                          </v-tooltip>-->
-                          <!--                        </template>-->
+                        <v-textarea
+                            v-model="nodes"
+                            :class="{ 'ta_mobile':mobile }"
+                            no-resize
+                            :disabled="!network_id"
+                            outlined
+                            placeholder="Enter your chosen IDs newline separated...">
+                          <template v-slot:label>
+                            <v-tooltip right>
+                              <template v-slot:activator="{on, attrs}">
+                                Node IDs
+                                <v-icon v-bind="attrs" v-on="on" small right style="top: -2px">far fa-question-circle
+                                </v-icon>
+                              </template>
+                              <div style="width: 250px; text-align: justify">
+                                Please enter a newline separated list of node ids in the selected ID space or use the example button to add some examples. For MONDO and DrugBank IDs entries can have the prefix "mondo." or "drugbank." but this is not necessary.
+                              </div>
+                            </v-tooltip>
+                          </template>
                         </v-textarea>
                       </v-col>
                     </v-row>
@@ -275,16 +307,31 @@
 
         <template>
           <div style="display: flex; justify-content: center">
-            <v-subheader :class="{sh_mobile:mobile, sh:!mobile}">4. Optional</v-subheader>
+            <v-subheader :class="{sh_mobile:mobile, sh:!mobile}" style="margin-bottom: 0; padding-bottom: 0">4.
+              Optional
+            </v-subheader>
           </div>
           <v-container :class="{border_mobile:mobile, border:!mobile}">
             <v-row justify="center">
-              <v-col cols="4" md="12">
+              <v-col cols="4" md="12" style="padding-top: 0">
                 <div>
                   <v-container>
                     <v-row>
-                      <v-col cols="8">
-                        <v-switch label="Use MWU" v-model="mwu"></v-switch>
+                      <v-col cols="8" style="padding-top: 0">
+                        <v-switch style="margin-top: 0;" v-model="mwu">
+                          <template v-slot:label>
+                            <v-tooltip right>
+                              <template v-slot:activator="{on, attrs}">
+                                Use MWU
+                                <v-icon v-bind="attrs" v-on="on" small right style="top: -2px">far fa-question-circle
+                                </v-icon>
+                              </template>
+                              <div style="width: 250px; text-align: justify">
+                                When enabled, the Mann-Whitney U test ist used to calculate cluster and global p-values.
+                              </div>
+                            </v-tooltip>
+                          </template>
+                        </v-switch>
                       </v-col>
                     </v-row>
                   </v-container>
@@ -535,24 +582,24 @@ export default {
       this.network = {nodes: Object.values(node_map), edges: Object.values(edge_map)}
     },
 
-    downloadLocal: function(){
-      let text = "#"+(this.networkType_loaded === 'diseasome' ? 'Disease ID' : 'Drug ID') + "\tLocal empirical P-value" + "\n";
+    downloadLocal: function () {
+      let text = "#" + (this.networkType_loaded === 'diseasome' ? 'Disease ID' : 'Drug ID') + "\tLocal empirical P-value" + "\n";
       let dlName = "local_empirical_p-values.tsv"
-      Object.values(this.local_scores.order).forEach(nid=> text +=this.local_scores.node[nid]+"\t"+this.local_scores.local_p_value[nid]+"\n")
+      Object.values(this.local_scores.order).forEach(nid => text += this.local_scores.node[nid] + "\t" + this.local_scores.local_p_value[nid] + "\n")
       this.execDownload(dlName, text)
     },
 
-    downloadCluster: function(mwu){
-      let text = "#"+(this.networkType_loaded === 'diseasome' ? 'Disease ID' : 'Drug ID') + "\tCluster-level P-value" + "\n";
-      let dlName = "cluster-level"+(mwu? '-mwu':'')+"_p-values.tsv"
-      Object.keys(this.cluster_scores.p_value).forEach(idx=> text +=this.cluster_scores.distance_type[idx]+"\t"+this.cluster_scores.p_value[idx]+"\n")
+    downloadCluster: function (mwu) {
+      let text = "#" + (this.networkType_loaded === 'diseasome' ? 'Disease ID' : 'Drug ID') + "\tCluster-level P-value" + "\n";
+      let dlName = "cluster-level" + (mwu ? '-mwu' : '') + "_p-values.tsv"
+      Object.keys(this.cluster_scores.p_value).forEach(idx => text += this.cluster_scores.distance_type[idx] + "\t" + this.cluster_scores.p_value[idx] + "\n")
       this.execDownload(dlName, text)
     },
 
-    downloadGlobal: function(mwu){
-      let text = "#"+(this.networkType_loaded === 'diseasome' ? 'Disease ID' : 'Drug ID') + "\tGlobal empirical P-value" + "\n";
-      let dlName = "global_empirical"+(mwu? '-mwu':'')+"_p-values.tsv"
-      Object.keys(this.global_scores.p_value).forEach(idx=> text +=this.global_scores.distance_type[idx]+"\t"+this.global_scores.p_value[idx]+"\n")
+    downloadGlobal: function (mwu) {
+      let text = "#" + (this.networkType_loaded === 'diseasome' ? 'Disease ID' : 'Drug ID') + "\tGlobal empirical P-value" + "\n";
+      let dlName = "global_empirical" + (mwu ? '-mwu' : '') + "_p-values.tsv"
+      Object.keys(this.global_scores.p_value).forEach(idx => text += this.global_scores.distance_type[idx] + "\t" + this.global_scores.p_value[idx] + "\n")
       this.execDownload(dlName, text)
     },
 
@@ -577,6 +624,13 @@ export default {
       }
       if (this.nodes.length > 0)
         params.nodes = this.nodes.split("\n").map(e => e.trim()).filter(e => e.length > 0)
+      if (['DrugBank', 'MONDO'].indexOf(this.network_id) > -1) {
+        params.nodes = params.nodes.map(n => {
+          if (n.startsWith(this.network_id.toLowerCase()))
+            return n
+          return this.network_id.toLowerCase() + "." + n
+        })
+      }
       this.results = false
 
       this.local_scores = undefined
