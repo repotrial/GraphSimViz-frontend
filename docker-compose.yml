@@ -5,5 +5,5 @@ services:
     container_name: graphsimviz-frontend
     build: .
     ports:
-      - "8031:80"
+      - "8011:80"
     restart: on-failure
