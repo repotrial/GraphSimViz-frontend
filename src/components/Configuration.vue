@@ -25,8 +25,8 @@
                 <v-container>
                   <v-row justify="center">
                   <span style="color: #858585">
-                  <b>Local empirical P-values</b><v-icon v-show="!local_scores" right
-                                                         style="top:-2px">mdi-cog fa-spin</v-icon>
+                  <b>Local empirical P-values</b><v-icon v-if="!local_scores" right
+                                                         style="top:-2px">mdi-cog fa-spin</v-icon><v-btn @click="downloadLocal()" v-else icon right small><v-icon style="top:-2px">mdi-download</v-icon></v-btn>
                     </span>
                   </v-row>
                   <v-row justify="center" v-if="local_scores">
@@ -67,14 +67,14 @@
                   <v-row justify="center">
                   <span style="color: #858585">
                   <b>
-                  Cluster-level P-value{{mwu ? ' (MWU)':''}}</b><v-icon v-show="!cluster_scores" right
-                                                   style="top:-2px">mdi-cog fa-spin</v-icon>
+                  Cluster-level P-value{{ mwu ? ' (MWU)' : '' }}</b><v-icon v-if="!cluster_scores" right
+                                                                            style="top:-2px">mdi-cog fa-spin</v-icon><v-btn @click="downloadCluster(mwu)" v-else icon right small><v-icon style="top:-2px">mdi-download</v-icon></v-btn>
                     </span>
                   </v-row>
                   <v-row justify="center" v-if="cluster_scores">
-<!--                    <v-skeleton-loader v-if="!cluster_scores" type="chip" small>-->
-<!--&lt;!&ndash;                      <v-chip></v-chip>&ndash;&gt;-->
-<!--                    </v-skeleton-loader>-->
+                    <!--                    <v-skeleton-loader v-if="!cluster_scores" type="chip" small>-->
+                    <!--&lt;!&ndash;                      <v-chip></v-chip>&ndash;&gt;-->
+                    <!--                    </v-skeleton-loader>-->
                     <v-chip dark small style="margin-top: 8px"
                             :color="get_significance_color(Object.values(Object.values(cluster_scores)[1])[Object.values(Object.values(cluster_scores)[0]).indexOf(ged_variant)])">
                       {{
@@ -85,8 +85,8 @@
                   <v-row justify="center" style="margin-top: 64px">
                   <span style="color: #858585">
                   <b>
-                  Global empirical P-value{{mwu ? ' (MWU)':''}}</b><v-icon v-show="!global_scores" right
-                                                      style="top:-2px">mdi-cog fa-spin</v-icon>
+                  Global empirical P-value{{ mwu ? ' (MWU)' : '' }}</b><v-icon v-if="!global_scores" right
+                                                                               style="top:-2px">mdi-cog fa-spin</v-icon><v-btn @click="downloadGlobal(mwu)" v-else icon right small><v-icon style="top:-2px">mdi-download</v-icon></v-btn>
                     </span>
                   </v-row>
 
@@ -535,45 +535,46 @@ export default {
           }
         })
       }
-
       this.network = {nodes: Object.values(node_map), edges: Object.values(edge_map)}
-      console.log(this.network)
     },
 
-    // load_neighbors: async function () {
-    //   let params = {
-    //     'network_type1': this.network1,
-    //     'network_type2': this.network2,
-    //     'id_space': this.network_id,
-    //     'nodes': []
-    //   }
-    //   if (this.nodes.length > 0)
-    //     params.nodes = this.nodes.split("\n").map(e => e.trim()).filter(e => e.length > 0)
-    //   this.results = false
-    //
-    //
-    //   this.results = true
-    //   this.$http.get_fist_neighbor_networks(params).then(response => {
-    //     console.log(response)
-    //     let new_nodes = []
-    //
-    //     response.forEach(nw => new_nodes = new_nodes.concat(Object.values(nw.nodes)))
-    //     let params = {
-    //       'network_type1': this.network1,
-    //       'network_type2': this.network2,
-    //       'id_space': this.network_id,
-    //       'nodes': new_nodes
-    //     }
-    //     this.request_results(params, response)
-    //     // this.convertNetworks(params, response)
-    //   }).catch(err => console.error(err))
-    // },
+    downloadLocal: function(){
+      let text = "#"+(this.networkType_loaded === 'diseasome' ? 'Disease ID' : 'Drug ID') + "\tLocal empirical P-value" + "\n";
+      let dlName = "local_empirical_p-values.tsv"
+      Object.values(this.local_scores.order).forEach(nid=> text +=this.local_scores.node[nid]+"\t"+this.local_scores.local_p_value[nid]+"\n")
+      this.execDownload(dlName, text)
+    },
+
+    downloadCluster: function(mwu){
+      let text = "#"+(this.networkType_loaded === 'diseasome' ? 'Disease ID' : 'Drug ID') + "\tCluster-level P-value" + "\n";
+      let dlName = "cluster-level"+(mwu? '-mwu':'')+"_p-values.tsv"
+      Object.keys(this.cluster_scores.p_value).forEach(idx=> text +=this.cluster_scores.distance_type[idx]+"\t"+this.cluster_scores.p_value[idx]+"\n")
+      this.execDownload(dlName, text)
+    },
+
+    downloadGlobal: function(mwu){
+      let text = "#"+(this.networkType_loaded === 'diseasome' ? 'Disease ID' : 'Drug ID') + "\tGlobal empirical P-value" + "\n";
+      let dlName = "global_empirical"+(mwu? '-mwu':'')+"_p-values.tsv"
+      Object.keys(this.global_scores.p_value).forEach(idx=> text +=this.global_scores.distance_type[idx]+"\t"+this.global_scores.p_value[idx]+"\n")
+      this.execDownload(dlName, text)
+    },
+
+    execDownload: function (name, content) {
+      let dl = document.createElement('a')
+      dl.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content))
+      dl.setAttribute('download', name)
+      dl.style.direction = 'none'
+      document.body.appendChild(dl)
+      dl.click()
+      document.body.removeChild(dl)
+    },
 
     checkEvent: async function (loaded) {
       let params = {
         'network_type1': this.network1,
         'network_type2': this.network2,
         'id_space': this.network_id,
+        'network': this.networkType,
         'nodes': [],
         'mwu': this.mwu
       }
@@ -605,7 +606,6 @@ export default {
           this.network2 = undefined
         }
       }
-      console.log("resets")
       if (start_step <= 3) {
         this.network_id = undefined
       }
@@ -620,7 +620,7 @@ export default {
         let nid_order = {}
         Object.keys(response.node).forEach(nid => {
           let idx = params.nodes.indexOf(response.node[nid])
-          if(idx > -1)
+          if (idx > -1)
             nid_order[idx] = nid
         })
         nid_order = Object.values(nid_order)
@@ -641,10 +641,11 @@ export default {
 
         this.scrollUp(loaded)
       }).catch(err => console.error(err))
-
+      this.ged_variant = params.network === 'drug-disease' ? 'topology_only' : 'normalized_scores';
       this.$http.get_global_scores(params).then(response => {
         let global_score_measure = this.mwu ? 'mwu_p_values' : 'empirical_p_values'
         this.global_scores = response[global_score_measure]
+
 
       }).catch(err => console.error(err))
       this.request_cluster_values(params)
