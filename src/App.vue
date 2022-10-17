@@ -65,8 +65,8 @@ export default {
   --drgstn-primary: #2d105f;
 }
 .drugstone-plugin-legend-small{
-  zoom: 0.8 !important;
-  -moz-transform: scale(.8) !important;
+  zoom: 0.75 !important;
+  -moz-transform: scale(.75) !important;
 }
 .v-text-field .v-label{
   text-overflow: unset !important;
