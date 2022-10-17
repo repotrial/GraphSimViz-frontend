@@ -66,5 +66,9 @@ export default {
 }
 .drugstone-plugin-legend-small{
   zoom: 0.8 !important;
+  -moz-transform: scale(.8) !important;
+}
+.v-text-field .v-label{
+  text-overflow: unset !important;
 }
 </style>

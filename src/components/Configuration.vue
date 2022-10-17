@@ -250,7 +250,8 @@
                             append-icon="mdi-menu-down"
                             :items="(network1 && network2 && (network1.indexOf('comorbidity') > -1 || network2.indexOf('comorbidity')> -1))? [{value: 'ICD10', text: 'ICD10'}] : network_ids[networkType]"
                             v-model="network_id" @change="unsetConfig(4)"
-                            style="max-width: 210px; min-width: 210px" dense hide-details :disabled="networkType ==='drugome'"
+                            style="max-width: 210px; min-width: 210px" dense hide-details
+                            :disabled="networkType ==='drugome'"
                         >
                           <template v-slot:label>
                             <v-tooltip right>
@@ -260,7 +261,7 @@
                                 </v-icon>
                               </template>
                               <div style="width: 250px; text-align: justify">
-                                {{networkType === 'drugome'?'Drug IDs have to be given in DrugBank space.':'Select the ID space in which you want to define entries.'}}
+                                {{ networkType === 'drugome' ? 'Drug IDs have to be given in DrugBank space.' : 'Select the ID space in which you want to define entries.' }}
                               </div>
                             </v-tooltip>
                           </template>
@@ -282,21 +283,27 @@
                             no-resize
                             :disabled="!network_id"
                             outlined
-                            placeholder="Enter your chosen IDs newline separated...">
-                          <template v-slot:label>
-                            <v-tooltip right>
-                              <template v-slot:activator="{on, attrs}">
-                                Node IDs
-                                <v-icon v-bind="attrs" v-on="on" small right style="top: -2px">far fa-question-circle
-                                </v-icon>
-                              </template>
-                              <div style="width: 250px; text-align: justify">
-                                Please enter a newline separated list of node ids in the selected ID space or use the
+                            label="Node IDs"
+                            hint="Please enter a newline separated list of node ids in the selected ID space or use the
                                 example button to add some examples. For MONDO and DrugBank IDs entries can have the
-                                prefix "mondo." or "drugbank." but this is not necessary.
-                              </div>
-                            </v-tooltip>
-                          </template>
+                                prefix 'mondo.' or 'drugbank.' but this is not necessary."
+                            placeholder="Enter your chosen IDs newline separated...">
+<!--                          <template v-slot:label>-->
+<!--                            <v-tooltip right>-->
+<!--                              <template v-slot:activator="{on, attrs}">-->
+<!--                                <span v-bind="attrs" v-on="on">-->
+<!--                                Node IDs-->
+<!--                                <v-icon small right style="top: -2px">far fa-question-circle-->
+<!--                                </v-icon>-->
+<!--                                  </span>-->
+<!--                              </template>-->
+<!--                              <div style="width: 250px; text-align: justify">-->
+<!--                                Please enter a newline separated list of node ids in the selected ID space or use the-->
+<!--                                example button to add some examples. For MONDO and DrugBank IDs entries can have the-->
+<!--                                prefix "mondo." or "drugbank." but this is not necessary.-->
+<!--                              </div>-->
+<!--                            </v-tooltip>-->
+<!--                          </template>-->
                         </v-textarea>
                       </v-col>
                     </v-row>
