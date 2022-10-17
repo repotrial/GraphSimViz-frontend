@@ -47,13 +47,13 @@
       <div style="margin-top: 16px; margin-bottom: 32px">
         <div>
           <v-btn icon><a style="text-decoration: none" :href="'mailto:'+getSSMail()">
-            <v-icon>fas fa-envelope</v-icon>
+            <v-icon>mdi-email</v-icon>
           </a></v-btn>
           sepideh.sadegh(_at-]uni-hamburg.de
         </div>
         <div>
           <v-btn icon><a style="text-decoration: none" :href="'mailto:'+getDBMail()">
-            <v-icon>fas fa-envelope</v-icon>
+            <v-icon>mdi-email</v-icon>
           </a></v-btn>
           david.b.blumenthal(_at-]fau.de
         </div>
