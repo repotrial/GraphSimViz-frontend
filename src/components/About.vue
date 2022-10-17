@@ -1,59 +1,23 @@
 <template>
   <div>
-    <div style="background-color: cornflowerblue; width: 100%; padding:16px">
-      <h2 :style="{display: 'flex', 'justify-content': 'center', color: 'white', 'font-size': mobile ? '2.5rem' : '4rem'}">
+    <div style="background-color: #ffbd8e; width: 100%; padding:16px">
+      <h2 :style="{display: 'flex', 'justify-content': 'center', color: '#2d105f', 'font-size': mobile ? '2.5rem' : '4rem'}">
         About</h2>
     </div>
     <div :style="{padding: mobile ? '32px 16px' : '32px 64px'}">
-      <!--      <b style="font-size: 1.5rem;">DIGEST</b>-->
-      <!--      <p style="text-align: justify; margin-top: 16px; margin-bottom: 32px"> DIGEST is a (“in silico validation of-->
-      <!--        <b>di</b>sease and <b>ge</b>ne <b>s</b>ets,-->
-      <!--        clus<b>t</b>erings or subnetworks”), is a Python-based validation tool available as a webinterface, as a <a-->
-      <!--            href="https://pypi.org/project/biodigest/" target="_blank">standalone package</a>, or over a-->
-      <!--        <a href="https://digest-validation.net/documentation" target="_blank">REST API</a>. DIGEST greatly facilitates-->
-      <!--        <i>in silico</i> validation of gene and disease sets or clusterings via fully-->
-      <!--        automated validation pipelines comprising disease and gene ID mapping, enrichment analysis, comparisons of-->
-      <!--        shared-->
-      <!--        genes and variants, and background distribution estimation. Moreover, functionality is provided to automatically-->
-      <!--        update the external databases used by the pipelines. DIGEST hence allows the user to assess the statistical-->
-      <!--        significance of candidate mechanisms with regard to functional and genetic coherence and enables the computation-->
-      <!--        of empirical P-values with just a few mouse clicks.</p>-->
-
-      <!--      <b style="font-size: 1.5rem">Resources</b>-->
-      <!--      <div style="margin-top: 16px; margin-bottom: 32px">-->
-      <!--        <div>-->
-      <!--          <v-btn icon><a style="text-decoration: none" target="_blank" href="https://pypi.org/project/biodigest/">-->
-      <!--            <v-icon>fab fa-python</v-icon>-->
-      <!--          </a></v-btn>-->
-      <!--          Python package (biodigest)-->
-      <!--        </div>-->
-      <!--        <div>-->
-      <!--          <v-btn icon><a style="text-decoration: none" target="_blank" href="https://github.com/bionetslab/digest">-->
-      <!--            <v-icon>fab fa-github</v-icon>-->
-      <!--          </a></v-btn>-->
-      <!--          DIGEST source code-->
-      <!--        </div>-->
-      <!--        <div>-->
-      <!--          <v-btn icon><a style="text-decoration: none" target="_blank"-->
-      <!--                         href="https://github.com/bionetslab/digest-tutorial/blob/main/Tutorial.ipynb">-->
-      <!--            <v-icon>fas fa-graduation-cap</v-icon>-->
-      <!--          </a></v-btn>-->
-      <!--          DIGEST tutorial material-->
-      <!--        </div>-->
-      <!--      </div>-->
 
 
       <b style="font-size: 1.5rem">Contact</b>
       <div style="margin-top: 16px; margin-bottom: 32px">
         <div>
           <v-btn icon><a style="text-decoration: none" :href="'mailto:'+getSSMail()">
-            <v-icon>mdi-email</v-icon>
+            <v-icon>mdi-email-edit</v-icon>
           </a></v-btn>
           sepideh.sadegh(_at-]uni-hamburg.de
         </div>
         <div>
           <v-btn icon><a style="text-decoration: none" :href="'mailto:'+getDBMail()">
-            <v-icon>mdi-email</v-icon>
+            <v-icon>mdi-email-edit</v-icon>
           </a></v-btn>
           david.b.blumenthal(_at-]fau.de
         </div>
