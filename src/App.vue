@@ -64,4 +64,7 @@ export default {
   --drgstn-text-secondary: #ffffff;
   --drgstn-primary: #2d105f;
 }
+.drugstone-plugin-legend-small{
+  zoom: 0.8 !important;
+}
 </style>
