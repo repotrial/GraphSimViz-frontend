@@ -250,7 +250,7 @@
                             append-icon="mdi-menu-down"
                             :items="(network1 && network2 && (network1.indexOf('comorbidity') > -1 || network2.indexOf('comorbidity')> -1))? [{value: 'ICD10', text: 'ICD10'}] : network_ids[networkType]"
                             v-model="network_id" @change="unsetConfig(4)"
-                            style="max-width: 210px; min-width: 210px" dense hide-details
+                            style="max-width: 210px; min-width: 210px" dense hide-details :disabled="networkType ==='drugome'"
                         >
                           <template v-slot:label>
                             <v-tooltip right>
@@ -260,7 +260,7 @@
                                 </v-icon>
                               </template>
                               <div style="width: 250px; text-align: justify">
-                                Select the ID space in which you want to define entries.
+                                {{networkType === 'drugome'?'Drug IDs have to be given in DrugBank space.':'Select the ID space in which you want to define entries.'}}
                               </div>
                             </v-tooltip>
                           </template>
