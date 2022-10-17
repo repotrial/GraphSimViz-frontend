@@ -25,10 +25,19 @@
                 <v-container>
                   <v-row justify="center">
                   <span style="color: #858585">
+<!--                  <v-tooltip right>-->
+<!--                    <template v-slot:activator="{on, attrs}">-->
                   <b>Local empirical P-values</b><v-icon v-if="!local_scores" right
                                                          style="top:-2px">mdi-cog fa-spin</v-icon><v-btn
-                      @click="downloadLocal()" v-else icon right small><v-icon
-                      style="top:-2px">mdi-download</v-icon></v-btn>
+                                                                                                         @click="downloadLocal()"
+                                                                                                         v-else icon
+                                                                                                         right small><v-icon
+                        style="top:-2px">mdi-download</v-icon></v-btn>
+<!--                                          </template>-->
+<!--                    <div style="width: 250px; text-align: justify">-->
+<!--                      Click here to download the local p-value table in .tsv format.-->
+<!--                    </div>-->
+<!--                  </v-tooltip>-->
                     </span>
                   </v-row>
                   <v-row justify="center" v-if="local_scores">
@@ -138,7 +147,7 @@
 
             <v-col cols="12" lg="4" :class="{'flex_content_center':mobile}">
               <div style="display: flex; justify-content: center">
-                <v-subheader :class="{sh_mobile:mobile, sh:!mobile}" style="margin-bottom: 0; padding-bottom: 0">
+                <v-subheader :class="{sh_mobile:mobile, sh:!mobile}" style="margin-bottom: 0; padding-bottom: 0; wrap">
                   1. Network
                 </v-subheader>
               </div>
@@ -261,7 +270,9 @@
                                 </v-icon>
                               </template>
                               <div style="width: 250px; text-align: justify">
-                                {{ networkType === 'drugome' ? 'Drug IDs have to be given in DrugBank space.' : 'Select the ID space in which you want to define entries.' }}
+                                {{
+                                  networkType === 'drugome' ? 'Drug IDs have to be given in DrugBank space.' : 'Select the ID space in which you want to define entries.'
+                                }}
                               </div>
                             </v-tooltip>
                           </template>
@@ -288,22 +299,6 @@
                                 example button to add some examples. For MONDO and DrugBank IDs entries can have the
                                 prefix 'mondo.' or 'drugbank.' but this is not necessary."
                             placeholder="Enter your chosen IDs newline separated...">
-<!--                          <template v-slot:label>-->
-<!--                            <v-tooltip right>-->
-<!--                              <template v-slot:activator="{on, attrs}">-->
-<!--                                <span v-bind="attrs" v-on="on">-->
-<!--                                Node IDs-->
-<!--                                <v-icon small right style="top: -2px">far fa-question-circle-->
-<!--                                </v-icon>-->
-<!--                                  </span>-->
-<!--                              </template>-->
-<!--                              <div style="width: 250px; text-align: justify">-->
-<!--                                Please enter a newline separated list of node ids in the selected ID space or use the-->
-<!--                                example button to add some examples. For MONDO and DrugBank IDs entries can have the-->
-<!--                                prefix "mondo." or "drugbank." but this is not necessary.-->
-<!--                              </div>-->
-<!--                            </v-tooltip>-->
-<!--                          </template>-->
                         </v-textarea>
                       </v-col>
                     </v-row>
@@ -863,6 +858,9 @@ export default {
 .margin_mobile
   padding-left: 8px
   padding-right: 8px
+
+.v-subheader
+  white-space: nowrap
 
 
 td
