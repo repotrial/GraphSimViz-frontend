@@ -116,7 +116,8 @@
                             </v-icon>
                           </template>
                           <div style="width: 300px; text-align: justify">
-                            For Diseasome and Drugome comparisons three graph edit distance variants can be displayed:<br>
+                            For Diseasome and Drugome comparisons three graph edit distance variants can be
+                            displayed:<br>
                             <b>Uniform edit costs:</b> Score normalized<br>
                             <b>Rank-based edit costs:</b> Rank normalized<br>
                             <b>Weight-based edit costs:</b> Topology only
@@ -254,7 +255,7 @@
                           <template v-slot:label>
                             <v-tooltip right>
                               <template v-slot:activator="{on, attrs}">
-                                {{ (networkType === 'diseasome' ? 'Disease ' : 'Drug ') + 'ID Space' }}
+                                {{ (networkType === 'drugome' ? 'Drug ' : 'Disease ') + 'ID Space' }}
                                 <v-icon v-bind="attrs" v-on="on" small right style="top: -2px">far fa-question-circle
                                 </v-icon>
                               </template>
@@ -290,7 +291,9 @@
                                 </v-icon>
                               </template>
                               <div style="width: 250px; text-align: justify">
-                                Please enter a newline separated list of node ids in the selected ID space or use the example button to add some examples. For MONDO and DrugBank IDs entries can have the prefix "mondo." or "drugbank." but this is not necessary.
+                                Please enter a newline separated list of node ids in the selected ID space or use the
+                                example button to add some examples. For MONDO and DrugBank IDs entries can have the
+                                prefix "mondo." or "drugbank." but this is not necessary.
                               </div>
                             </v-tooltip>
                           </template>
@@ -658,7 +661,10 @@ export default {
         }
       }
       if (start_step <= 3) {
-        this.network_id = undefined
+        if (this.networkType === 'drugome') {
+          this.network_id = 'DrugBank'
+        } else
+          this.network_id = undefined
       }
       if (start_step <= 4) {
         this.nodes = ''
