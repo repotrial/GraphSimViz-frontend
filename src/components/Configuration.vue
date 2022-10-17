@@ -25,19 +25,17 @@
                 <v-container>
                   <v-row justify="center">
                   <span style="color: #858585">
-<!--                  <v-tooltip right>-->
-<!--                    <template v-slot:activator="{on, attrs}">-->
-                  <b>Local empirical P-values</b><v-icon v-if="!local_scores" right
-                                                         style="top:-2px">mdi-cog fa-spin</v-icon><v-btn
-                                                                                                         @click="downloadLocal()"
-                                                                                                         v-else icon
-                                                                                                         right small><v-icon
+                  <b>Local empirical P-values</b>
+                    <v-icon v-if="!local_scores" right style="top:-2px">mdi-cog fa-spin</v-icon>
+                    <v-tooltip right>
+                    <template v-slot:activator="{on, attrs}">
+                    <v-btn @click="downloadLocal()" v-show="local_scores" icon right small v-bind="attrs" v-on="on"><v-icon
                         style="top:-2px">mdi-download</v-icon></v-btn>
-<!--                                          </template>-->
-<!--                    <div style="width: 250px; text-align: justify">-->
-<!--                      Click here to download the local p-value table in .tsv format.-->
-<!--                    </div>-->
-<!--                  </v-tooltip>-->
+                    </template>
+                    <div style="width: 250px; text-align: justify">
+                      Click here to download the local P-value table in .tsv format.
+                    </div>
+                  </v-tooltip>
                     </span>
                   </v-row>
                   <v-row justify="center" v-if="local_scores">
@@ -79,15 +77,25 @@
                   <span style="color: #858585">
                   <b>
                   Cluster-level P-value{{ mwu ? ' (MWU)' : '' }}</b><v-icon v-if="!cluster_scores" right
-                                                                            style="top:-2px">mdi-cog fa-spin</v-icon><v-btn
-                      @click="downloadCluster(mwu)" v-else icon right small><v-icon
-                      style="top:-2px">mdi-download</v-icon></v-btn>
+                                                                            style="top:-2px">mdi-cog fa-spin</v-icon>
+<!--                    <v-btn-->
+<!--                      @click="downloadCluster(mwu)" v-else icon right small>-->
+<!--                    <v-icon-->
+<!--                      style="top:-2px">mdi-download</v-icon></v-btn>-->
+
+
+                    <v-tooltip right>
+                      <template v-slot:activator="{on, attrs}">
+                        <v-btn @click="downloadCluster(mwu)" v-show="cluster_scores" icon right small v-bind="attrs" v-on="on"><v-icon
+                            style="top:-2px">mdi-download</v-icon></v-btn>
+                      </template>
+                      <div style="width: 250px; text-align: justify">
+                        Click here to download the cluster-level P-value table in .tsv format.
+                      </div>
+                    </v-tooltip>
                     </span>
                   </v-row>
                   <v-row justify="center" v-if="cluster_scores">
-                    <!--                    <v-skeleton-loader v-if="!cluster_scores" type="chip" small>-->
-                    <!--&lt;!&ndash;                      <v-chip></v-chip>&ndash;&gt;-->
-                    <!--                    </v-skeleton-loader>-->
                     <v-chip dark small style="margin-top: 8px"
                             :color="get_significance_color(Object.values(Object.values(cluster_scores)[1])[Object.values(Object.values(cluster_scores)[0]).indexOf(ged_variant)])">
                       {{
@@ -98,10 +106,24 @@
                   <v-row justify="center" style="margin-top: 64px">
                   <span style="color: #858585">
                   <b>
-                  Global empirical P-value{{ mwu ? ' (MWU)' : '' }}</b><v-icon v-if="!global_scores" right
-                                                                               style="top:-2px">mdi-cog fa-spin</v-icon><v-btn
-                      @click="downloadGlobal(mwu)" v-else icon right small><v-icon
-                      style="top:-2px">mdi-download</v-icon></v-btn>
+                  Global empirical P-value{{ mwu ? ' (MWU)' : '' }}</b>
+                    <v-icon v-if="!global_scores" right style="top:-2px">mdi-cog fa-spin</v-icon>
+<!--                    <v-btn-->
+<!--                      @click="downloadGlobal(mwu)" v-else icon right small><v-icon-->
+<!--                      style="top:-2px">mdi-download</v-icon></v-btn>-->
+
+
+                     <v-tooltip right>
+                    <template v-slot:activator="{on, attrs}">
+                    <v-btn @click="downloadGlobal(mwu)" v-show="global_scores" icon right small v-bind="attrs" v-on="on"><v-icon
+                        style="top:-2px">mdi-download</v-icon></v-btn>
+                    </template>
+                    <div style="width: 250px; text-align: justify">
+                      Click here to download the global P-value in .tsv format.
+                    </div>
+                  </v-tooltip>
+
+
                     </span>
                   </v-row>
 
