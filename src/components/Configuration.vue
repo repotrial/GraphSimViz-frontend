@@ -77,16 +77,17 @@
                   <span style="color: #858585">
                   <b>
                   Cluster-level {{ mwu ? ' MWU' : '' }} P-value</b><v-icon v-if="!cluster_scores" right
-                                                                            style="top:-2px">mdi-cog fa-spin</v-icon>
-<!--                    <v-btn-->
-<!--                      @click="downloadCluster(mwu)" v-else icon right small>-->
-<!--                    <v-icon-->
-<!--                      style="top:-2px">mdi-download</v-icon></v-btn>-->
+                                                                           style="top:-2px">mdi-cog fa-spin</v-icon>
+                    <!--                    <v-btn-->
+                    <!--                      @click="downloadCluster(mwu)" v-else icon right small>-->
+                    <!--                    <v-icon-->
+                    <!--                      style="top:-2px">mdi-download</v-icon></v-btn>-->
 
 
                     <v-tooltip right>
                       <template v-slot:activator="{on, attrs}">
-                        <v-btn @click="downloadCluster(mwu)" v-show="cluster_scores" icon right small v-bind="attrs" v-on="on"><v-icon
+                        <v-btn @click="downloadCluster(mwu)" v-show="cluster_scores" icon right small v-bind="attrs"
+                               v-on="on"><v-icon
                             style="top:-2px">mdi-download</v-icon></v-btn>
                       </template>
                       <div style="width: 250px; text-align: justify">
@@ -106,16 +107,17 @@
                   <v-row justify="center" style="margin-top: 64px">
                   <span style="color: #858585">
                   <b>
-                  Global {{mwu ? "MWU" :"empirical"}} P-value</b>
+                  Global {{ mwu ? "MWU" : "empirical" }} P-value</b>
                     <v-icon v-if="!global_scores" right style="top:-2px">mdi-cog fa-spin</v-icon>
-<!--                    <v-btn-->
-<!--                      @click="downloadGlobal(mwu)" v-else icon right small><v-icon-->
-<!--                      style="top:-2px">mdi-download</v-icon></v-btn>-->
+                    <!--                    <v-btn-->
+                    <!--                      @click="downloadGlobal(mwu)" v-else icon right small><v-icon-->
+                    <!--                      style="top:-2px">mdi-download</v-icon></v-btn>-->
 
 
                      <v-tooltip right>
                     <template v-slot:activator="{on, attrs}">
-                    <v-btn @click="downloadGlobal(mwu)" v-show="global_scores" icon right small v-bind="attrs" v-on="on"><v-icon
+                    <v-btn @click="downloadGlobal(mwu)" v-show="global_scores" icon right small v-bind="attrs"
+                           v-on="on"><v-icon
                         style="top:-2px">mdi-download</v-icon></v-btn>
                     </template>
                     <div style="width: 250px; text-align: justify">
@@ -508,7 +510,8 @@ export default {
         "showNetworkMenuButtonExpression": false,
         "showNetworkMenuButtonAdjacentDrugs": false,
         "showNetworkMenuButtonAdjacentDisordersProteins": false,
-        "showNetworkMenuButtonAdjacentDisordersDrugs": false
+        "showNetworkMenuButtonAdjacentDisordersDrugs": false,
+        "expandNetworkMenu": true
       },
       name_map: {
         'normalized_scores': 'Uniform edit costs',
