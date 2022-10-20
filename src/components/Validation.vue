@@ -11,7 +11,7 @@
       <div style="width: 60%; justify-content: flex-end; margin-left: auto; margin-right: 0">
         <div style=" height: 100%;display:flex;">
           <p :style="{'font-size': mobile ? '1rem' : '1.3rem', color: '#2d105f', 'align-self': 'flex-end', 'margin-top': 'auto', 'margin-bottom': 0}">
-            Lacking mechanistic disease definitions and corresponding association data hamper progress in network medicine and beyond.</p>
+            Statistical quantification of association biases caused by disease definitions in network medicine</p>
         </div>
       </div>
 

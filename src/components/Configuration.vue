@@ -76,7 +76,7 @@
                   <v-row justify="center">
                   <span style="color: #858585">
                   <b>
-                  Cluster-level P-value{{ mwu ? ' (MWU)' : '' }}</b><v-icon v-if="!cluster_scores" right
+                  Cluster-level {{ mwu ? ' MWU' : '' }} P-value</b><v-icon v-if="!cluster_scores" right
                                                                             style="top:-2px">mdi-cog fa-spin</v-icon>
 <!--                    <v-btn-->
 <!--                      @click="downloadCluster(mwu)" v-else icon right small>-->
@@ -106,7 +106,7 @@
                   <v-row justify="center" style="margin-top: 64px">
                   <span style="color: #858585">
                   <b>
-                  Global empirical P-value{{ mwu ? ' (MWU)' : '' }}</b>
+                  Global {{mwu ? "MWU" :"empirical"}} P-value</b>
                     <v-icon v-if="!global_scores" right style="top:-2px">mdi-cog fa-spin</v-icon>
 <!--                    <v-btn-->
 <!--                      @click="downloadGlobal(mwu)" v-else icon right small><v-icon-->
@@ -618,14 +618,14 @@ export default {
 
     downloadCluster: function (mwu) {
       let text = "#" + (this.networkType_loaded === 'diseasome' ? 'Disease ID' : 'Drug ID') + "\tCluster-level P-value" + "\n";
-      let dlName = "cluster-level" + (mwu ? '-mwu' : '') + "_p-values.tsv"
+      let dlName = "cluster-level" + (mwu ? '_mwu' : '') + "_p-values.tsv"
       Object.keys(this.cluster_scores.p_value).forEach(idx => text += this.cluster_scores.distance_type[idx] + "\t" + this.cluster_scores.p_value[idx] + "\n")
       this.execDownload(dlName, text)
     },
 
     downloadGlobal: function (mwu) {
       let text = "#" + (this.networkType_loaded === 'diseasome' ? 'Disease ID' : 'Drug ID') + "\tGlobal empirical P-value" + "\n";
-      let dlName = "global_empirical" + (mwu ? '-mwu' : '') + "_p-values.tsv"
+      let dlName = "global" + (mwu ? '_mwu' : '_empirical') + "_p-values.tsv"
       Object.keys(this.global_scores.p_value).forEach(idx => text += this.global_scores.distance_type[idx] + "\t" + this.global_scores.p_value[idx] + "\n")
       this.execDownload(dlName, text)
     },
