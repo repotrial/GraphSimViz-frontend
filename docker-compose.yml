@@ -6,4 +6,4 @@ services:
     build: .
     ports:
       - "8011:80"
-    restart: on-failure
+    restart: always
