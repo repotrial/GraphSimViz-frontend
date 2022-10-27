@@ -619,9 +619,15 @@ export default {
     },
 
     downloadLocal: function () {
-      let text = "#" + (this.networkType_loaded === 'diseasome' ? 'Disease ID' : 'Drug ID') + "\tLocal empirical P-value" + "\n";
+      let text = "#" + (this.networkType_loaded === 'diseasome' ? 'Disease ID' : 'Drug ID');
+      Object.values(this.name_map).forEach(v => text += "\t" + v)
+      text += "\n"
       let dlName = "local_empirical_p-values.tsv"
-      Object.values(this.local_scores.order).forEach(nid => text += this.local_scores.node[nid] + "\t" + this.local_scores.local_p_value[nid] + "\n")
+      for (let idx in this.local_scores[this.ged_variant].order) {
+        text += this.local_scores[this.ged_variant].node[nid]
+        Object.keys(this.name_map).forEach(distance_type => this.local_scores[distance_type].order.forEach(nid => text += "\t" + this.local_scores.local_p_value[nid]))
+        text += "\n"
+      }
       this.execDownload(dlName, text)
     },
 
@@ -630,14 +636,16 @@ export default {
       let dlName = "cluster-level" + (mwu ? '_mwu' : '') + "_p-values.tsv"
       Object.keys(this.cluster_scores.p_value).forEach(idx => text += this.cluster_scores.distance_type[idx] + "\t" + this.cluster_scores.p_value[idx] + "\n")
       this.execDownload(dlName, text)
-    },
+    }
+    ,
 
     downloadGlobal: function (mwu) {
       let text = "#" + (this.networkType_loaded === 'diseasome' ? 'Disease ID' : 'Drug ID') + "\tGlobal empirical P-value" + "\n";
       let dlName = "global" + (mwu ? '_mwu' : '_empirical') + "_p-values.tsv"
       Object.keys(this.global_scores.p_value).forEach(idx => text += this.global_scores.distance_type[idx] + "\t" + this.global_scores.p_value[idx] + "\n")
       this.execDownload(dlName, text)
-    },
+    }
+    ,
 
     execDownload: function (name, content) {
       let dl = document.createElement('a')
@@ -647,7 +655,8 @@ export default {
       document.body.appendChild(dl)
       dl.click()
       document.body.removeChild(dl)
-    },
+    }
+    ,
 
     checkEvent: async function (loaded) {
       let params = {
@@ -679,7 +688,8 @@ export default {
 
       this.request_results(params, undefined, loaded)
 
-    },
+    }
+    ,
 
     unsetConfig: function (start_step) {
       if (start_step <= 2) {
@@ -703,7 +713,8 @@ export default {
       if (start_step <= 4) {
         this.nodes = ''
       }
-    },
+    }
+    ,
 
     set_local_scores: function (networks, scroll, loaded) {
       for (let distance_type of Object.keys(this.local_scores)) {
@@ -732,11 +743,13 @@ export default {
       }
       if (scroll)
         this.scrollUp(loaded)
-    },
+    }
+    ,
 
     update_network: function () {
       this.convertNetworks(this.current_params, this.current_networks)
-    },
+    }
+    ,
 
     request_results: function (params, networks, loaded) {
       this.$http.get_local_scores(params).then(response => {
@@ -749,7 +762,8 @@ export default {
         this.global_scores = response[global_score_measure]
       }).catch(err => console.error(err))
       this.request_cluster_values(params)
-    },
+    }
+    ,
 
     request_cluster_values: function (params) {
       this.$http.get_cluster_scores(params).then(response => {
@@ -759,7 +773,8 @@ export default {
           setTimeout(() => this.request_cluster_values(params), 5000)
         }
       }).catch(err => console.error(err))
-    },
+    }
+    ,
 
 
     loadExample: function (id_space) {
