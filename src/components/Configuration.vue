@@ -514,9 +514,9 @@ export default {
         "expandNetworkMenu": true
       },
       name_map: {
-        'normalized_scores': 'Uniform edit costs',
+        'normalized_scores': 'Weight-based edit costs',
         'normalized_ranks': 'Rank-based edit costs',
-        'topology_only': 'Weight-based edit costs'
+        'topology_only': 'Uniform edit costs'
       },
       network: undefined,
       mwu: false,
