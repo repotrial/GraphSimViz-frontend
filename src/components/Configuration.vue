@@ -138,7 +138,7 @@
                     </v-chip>
                   </v-row>
                   <v-row justify="center" style="margin-top: 64px">
-                    <v-select v-if="global_scores" dense
+                    <v-select v-if="global_scores" dense @change="checkEvent(true)"
                               :items="Object.values(Object.values(global_scores)[0]).map(k=>{return{text: map_names(k), value:k}})"
                               style="max-width: 250px" append-icon="mdi-menu-down" v-model="ged_variant">
                       <template v-slot:label>
@@ -148,7 +148,7 @@
                             <v-icon v-bind="attrs" v-on="on" small right style="top: -2px">far fa-question-circle
                             </v-icon>
                           </template>
-                          <div style="width: 300px; text-align: justify" @change="checkEvent(true)">
+                          <div style="width: 300px; text-align: justify">
                             For Diseasome and Drugome comparisons three graph edit distance variants can be
                             displayed:<br>
 <!--                            'normalized_scores': 'Weight-based edit costs',-->
@@ -451,7 +451,7 @@ export default {
       local_scores: undefined,
       cluster_scores: undefined,
       global_scores: undefined,
-      ged_variant: 'normalized_scores',
+      ged_variant: 'topology_only',
       groupConfig: {
         "nodeGroups": {
           "****": {
