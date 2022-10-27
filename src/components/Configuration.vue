@@ -624,8 +624,12 @@ export default {
       text += "\n"
       let dlName = "local_empirical_p-values.tsv"
       for (let idx in this.local_scores[this.ged_variant].order) {
+
         text += this.local_scores[this.ged_variant].node[this.local_scores[this.ged_variant].order[idx]]
-        Object.keys(this.name_map).forEach(distance_type => text += "\t" + this.local_scores.local_p_value[this.local_scores[distance_type].order[idx]])
+        Object.keys(this.name_map).forEach(distance_type => {
+          text += "\t" + this.local_scores[distance_type].local_p_value[this.local_scores[distance_type].order[idx]]
+
+        })
         text += "\n"
       }
       this.execDownload(dlName, text)
