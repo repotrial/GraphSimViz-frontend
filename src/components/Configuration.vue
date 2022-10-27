@@ -619,16 +619,15 @@ export default {
     },
 
     downloadLocal: function () {
+      let distance_types = this.networkType === 'drug-disease' ? ['topology_only'] : Object.keys(this.name_map)
       let text = "#" + (this.networkType_loaded === 'diseasome' ? 'Disease ID' : 'Drug ID');
-      Object.values(this.name_map).forEach(v => text += "\t" + v)
+      distance_types.map(dt => this.name_map[dt]).forEach(v => text += "\t" + v)
       text += "\n"
       let dlName = "local_empirical_p-values.tsv"
       for (let idx in this.local_scores[this.ged_variant].order) {
-
         text += this.local_scores[this.ged_variant].node[this.local_scores[this.ged_variant].order[idx]]
-        Object.keys(this.name_map).forEach(distance_type => {
+        distance_types.forEach(distance_type => {
           text += "\t" + this.local_scores[distance_type].local_p_value[this.local_scores[distance_type].order[idx]]
-
         })
         text += "\n"
       }
