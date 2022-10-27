@@ -55,13 +55,14 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="idx in local_scores.order"
+                        <tr v-for="idx in local_scores[ged_variant].order"
                             :key="'local'+idx">
-                          <td>{{ local_scores.names[idx] }}</td>
-                          <td>{{ local_scores.node[idx] }}</td>
+                          <td>{{ local_scores[ged_variant].names[idx] }}</td>
+                          <td>{{ local_scores[ged_variant].node[idx] }}</td>
                           <td>
-                            <v-chip dark small :color="get_significance_color(local_scores.local_p_value[idx])">
-                              {{ local_scores.local_p_value[idx].toExponential(3) }}
+                            <v-chip dark small
+                                    :color="get_significance_color(local_scores[ged_variant].local_p_value[idx])">
+                              {{ local_scores[ged_variant].local_p_value[idx].toExponential(3) }}
                             </v-chip>
                           </td>
                         </tr>
@@ -138,7 +139,7 @@
                     </v-chip>
                   </v-row>
                   <v-row justify="center" style="margin-top: 64px">
-                    <v-select v-if="global_scores" dense @change="reload_local()"
+                    <v-select v-if="global_scores" dense @change="update_network()"
                               :items="Object.values(Object.values(global_scores)[0]).map(k=>{return{text: map_names(k), value:k}})"
                               style="max-width: 250px" append-icon="mdi-menu-down" v-model="ged_variant">
                       <template v-slot:label>
@@ -451,6 +452,8 @@ export default {
       local_scores: undefined,
       cluster_scores: undefined,
       global_scores: undefined,
+      current_params: undefined,
+      current_networks: undefined,
       ged_variant: 'topology_only',
       groupConfig: {
         "nodeGroups": {
@@ -584,7 +587,7 @@ export default {
       input.nodes.forEach(n => {
         node_map[n] = {id: n, label: n, group: 'missing'}
       })
-      let scores = this.local_scores
+      let scores = this.local_scores[this.ged_variant]
       Object.keys(scores.node).forEach(nid => {
         let n = scores.node[nid]
         node_map[n].group = this.get_significance_group(scores.local_p_value[nid])
@@ -657,6 +660,7 @@ export default {
       }
       if (this.nodes.length > 0)
         params.nodes = this.nodes.split("\n").map(e => e.trim()).filter(e => e.length > 0)
+      this.current_params = params
       if (['DrugBank', 'MONDO'].indexOf(this.network_id) > -1) {
         params.nodes = params.nodes.map(n => {
           if (n.startsWith(this.network_id.toLowerCase()))
@@ -701,31 +705,12 @@ export default {
       }
     },
 
-
-    reload_local: function (networks) {
-      let params = {
-        'network_type1': this.network1,
-        'network_type2': this.network2,
-        'id_space': this.network_id,
-        'network': this.networkType,
-        'nodes': [],
-        'mwu': this.mwu
-      }
-      if (this.nodes.length > 0)
-        params.nodes = this.nodes.split("\n").map(e => e.trim()).filter(e => e.length > 0)
-      if (['DrugBank', 'MONDO'].indexOf(this.network_id) > -1) {
-        params.nodes = params.nodes.map(n => {
-          if (n.startsWith(this.network_id.toLowerCase()))
-            return n
-          return this.network_id.toLowerCase() + "." + n
-        })
-      }
-
-      this.$http.get_local_scores(params).then(response => {
+    set_local_scores: function (networks, scroll, loaded) {
+      for (let distance_type of Object.keys(this.local_scores)) {
         let names = {}
         let nid_order = {}
-        Object.keys(response.node).forEach(nid => {
-          let idx = params.nodes.indexOf(response.node[nid])
+        Object.keys(this.local_scores[distance_type].node).forEach(nid => {
+          let idx = this.current_params.nodes.indexOf(this.local_scores[distance_type].node[nid])
           if (idx > -1)
             nid_order[idx] = nid
         })
@@ -733,61 +718,38 @@ export default {
         nid_order.forEach(nid => {
           names[nid] = 'D' + (Object.keys(names).length + 1)
         })
-        response.names = names
-        response.order = nid_order
-        this.networkType_loaded = this.networkType
-        this.local_scores = response
-        if (networks) {
-          this.convertNetworks(params, networks)
-        } else {
-          this.$http.get_networks(params).then(response => {
-            this.convertNetworks(params, response)
-          }).catch(console.error)
-        }
-
-        // this.scrollUp(loaded)
-      }).catch(err => console.error(err))
+        this.local_scores[distance_type].names = names
+        this.local_scores[distance_type].order = nid_order
+      }
+      this.networkType_loaded = this.networkType
+      if (networks) {
+        this.convertNetworks(this.current_params, networks)
+      } else {
+        this.$http.get_networks(this.current_params).then(response => {
+          this.current_networks = response
+          this.convertNetworks(this.current_params, response)
+        }).catch(console.error)
+      }
+      if (scroll)
+        this.scrollUp(loaded)
     },
 
+    update_network: function () {
+      this.convertNetworks(this.current_params, this.current_networks)
+    },
 
-    request_results: function(params, networks, loaded) {
+    request_results: function (params, networks, loaded) {
       this.$http.get_local_scores(params).then(response => {
-        let names = {}
-        let nid_order = {}
-        Object.keys(response.node).forEach(nid => {
-          let idx = params.nodes.indexOf(response.node[nid])
-          if (idx > -1)
-            nid_order[idx] = nid
-        })
-        nid_order = Object.values(nid_order)
-        nid_order.forEach(nid => {
-          names[nid] = 'D' + (Object.keys(names).length + 1)
-        })
-        response.names = names
-        response.order = nid_order
-        this.networkType_loaded = this.networkType
         this.local_scores = response
-        if (networks) {
-          this.convertNetworks(params, networks)
-        } else {
-          this.$http.get_networks(params).then(response => {
-            this.convertNetworks(params, response)
-          }).catch(console.error)
-        }
-
-        this.scrollUp(loaded)
+        this.set_local_scores(networks, true, loaded)
       }).catch(err => console.error(err))
-      this.ged_variant = params.network === 'drug-disease' ? 'topology_only' : 'normalized_scores';
+      this.ged_variant = 'topology_only';
       this.$http.get_global_scores(params).then(response => {
         let global_score_measure = this.mwu ? 'mwu_p_values' : 'empirical_p_values'
         this.global_scores = response[global_score_measure]
-
-
       }).catch(err => console.error(err))
       this.request_cluster_values(params)
-    }
-
-    ,
+    },
 
     request_cluster_values: function (params) {
       this.$http.get_cluster_scores(params).then(response => {
@@ -796,10 +758,8 @@ export default {
         } else {
           setTimeout(() => this.request_cluster_values(params), 5000)
         }
-
       }).catch(err => console.error(err))
-    }
-    ,
+    },
 
 
     loadExample: function (id_space) {
