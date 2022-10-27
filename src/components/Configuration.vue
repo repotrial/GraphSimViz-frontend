@@ -138,7 +138,7 @@
                     </v-chip>
                   </v-row>
                   <v-row justify="center" style="margin-top: 64px">
-                    <v-select v-if="global_scores" dense @change="checkEvent(true)"
+                    <v-select v-if="global_scores" dense @change="reload_local()"
                               :items="Object.values(Object.values(global_scores)[0]).map(k=>{return{text: map_names(k), value:k}})"
                               style="max-width: 250px" append-icon="mdi-menu-down" v-model="ged_variant">
                       <template v-slot:label>
@@ -151,9 +151,9 @@
                           <div style="width: 300px; text-align: justify">
                             For Diseasome and Drugome comparisons three graph edit distance variants can be
                             displayed:<br>
-<!--                            'normalized_scores': 'Weight-based edit costs',-->
-<!--                            'normalized_ranks': 'Rank-based edit costs',-->
-<!--                            'topology_only': 'Uniform edit costs'-->
+                            <!--                            'normalized_scores': 'Weight-based edit costs',-->
+                            <!--                            'normalized_ranks': 'Rank-based edit costs',-->
+                            <!--                            'topology_only': 'Uniform edit costs'-->
                             <b>Uniform edit costs:</b> Topology only<br>
                             <b>Rank-based edit costs:</b> Rank normalized<br>
                             <b>Weight-based edit costs:</b> Score normalized
@@ -701,7 +701,56 @@ export default {
       }
     },
 
-    request_results: function (params, networks, loaded) {
+
+    reload_local: function (networks) {
+      let params = {
+        'network_type1': this.network1,
+        'network_type2': this.network2,
+        'id_space': this.network_id,
+        'network': this.networkType,
+        'nodes': [],
+        'mwu': this.mwu
+      }
+      if (this.nodes.length > 0)
+        params.nodes = this.nodes.split("\n").map(e => e.trim()).filter(e => e.length > 0)
+      if (['DrugBank', 'MONDO'].indexOf(this.network_id) > -1) {
+        params.nodes = params.nodes.map(n => {
+          if (n.startsWith(this.network_id.toLowerCase()))
+            return n
+          return this.network_id.toLowerCase() + "." + n
+        })
+      }
+
+      this.$http.get_local_scores(params).then(response => {
+        let names = {}
+        let nid_order = {}
+        Object.keys(response.node).forEach(nid => {
+          let idx = params.nodes.indexOf(response.node[nid])
+          if (idx > -1)
+            nid_order[idx] = nid
+        })
+        nid_order = Object.values(nid_order)
+        nid_order.forEach(nid => {
+          names[nid] = 'D' + (Object.keys(names).length + 1)
+        })
+        response.names = names
+        response.order = nid_order
+        this.networkType_loaded = this.networkType
+        this.local_scores = response
+        if (networks) {
+          this.convertNetworks(params, networks)
+        } else {
+          this.$http.get_networks(params).then(response => {
+            this.convertNetworks(params, response)
+          }).catch(console.error)
+        }
+
+        // this.scrollUp(loaded)
+      }).catch(err => console.error(err))
+    },
+
+
+    request_results: function(params, networks, loaded) {
       this.$http.get_local_scores(params).then(response => {
         let names = {}
         let nid_order = {}
@@ -736,7 +785,9 @@ export default {
 
       }).catch(err => console.error(err))
       this.request_cluster_values(params)
-    },
+    }
+
+    ,
 
     request_cluster_values: function (params) {
       this.$http.get_cluster_scores(params).then(response => {
@@ -747,7 +798,8 @@ export default {
         }
 
       }).catch(err => console.error(err))
-    },
+    }
+    ,
 
 
     loadExample: function (id_space) {
