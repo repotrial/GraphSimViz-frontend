@@ -148,12 +148,15 @@
                             <v-icon v-bind="attrs" v-on="on" small right style="top: -2px">far fa-question-circle
                             </v-icon>
                           </template>
-                          <div style="width: 300px; text-align: justify">
+                          <div style="width: 300px; text-align: justify" @change="checkEvent(true)">
                             For Diseasome and Drugome comparisons three graph edit distance variants can be
                             displayed:<br>
-                            <b>Uniform edit costs:</b> Score normalized<br>
+<!--                            'normalized_scores': 'Weight-based edit costs',-->
+<!--                            'normalized_ranks': 'Rank-based edit costs',-->
+<!--                            'topology_only': 'Uniform edit costs'-->
+                            <b>Uniform edit costs:</b> Topology only<br>
                             <b>Rank-based edit costs:</b> Rank normalized<br>
-                            <b>Weight-based edit costs:</b> Topology only
+                            <b>Weight-based edit costs:</b> Score normalized
                           </div>
                         </v-tooltip>
                       </template>
