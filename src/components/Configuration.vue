@@ -175,7 +175,7 @@
 
             <v-col cols="12" lg="4" :class="{'flex_content_center':mobile}">
               <div style="display: flex; justify-content: center">
-                <v-subheader :class="{sh_mobile:mobile, sh:!mobile}" style="margin-bottom: 0; padding-bottom: 0; wrap">
+                <v-subheader :class="{sh_mobile:mobile, sh:!mobile}" style="margin-bottom: 0; padding-bottom: 0;">
                   1. Network
                 </v-subheader>
               </div>
@@ -324,8 +324,8 @@
                             outlined
                             label="Node IDs"
                             hint="Please enter a newline separated list of node ids in the selected ID space or use the
-                                example button to add some examples. For MONDO and DrugBank IDs entries can have the
-                                prefix 'mondo.' or 'drugbank.' but this is not necessary."
+                                example button to add some examples. MONDO, UMLS and DrugBank IDs entries can have the
+                                prefix 'mondo.', 'umls.' or 'drugbank.' but this is not necessary."
                             placeholder="Enter your chosen IDs newline separated...">
                         </v-textarea>
                       </v-col>
@@ -436,9 +436,12 @@ export default {
       networkType: "diseasome",
       networkType_loaded: 'diseaseome',
       network_ids: {
-        'diseasome': [{value: 'MONDO', text: 'MONDO'}, {value: 'ICD10', text: 'ICD10'}],
+        'diseasome': [{value: 'MONDO', text: 'MONDO'}, {value: 'ICD10', text: 'ICD10'}, {value: 'UMLS', text: 'UMLS'}],
         'drugome': [{value: 'DrugBank', text: 'DrugBank'}],
-        'drug-disease': [{value: 'MONDO', text: 'MONDO'}, {value: 'ICD10', text: 'ICD10'}]
+        'drug-disease': [{value: 'MONDO', text: 'MONDO'}, {value: 'ICD10', text: 'ICD10'}, {
+          value: 'UMLS',
+          text: 'UMLS'
+        }]
       },
       network_id: 'MONDO',
       nodes: "mondo.0004975\n" +
@@ -673,7 +676,7 @@ export default {
       if (this.nodes.length > 0)
         params.nodes = this.nodes.split("\n").map(e => e.trim()).filter(e => e.length > 0)
       this.current_params = params
-      if (['DrugBank', 'MONDO'].indexOf(this.network_id) > -1) {
+      if (['DrugBank', 'MONDO','UMLS'].indexOf(this.network_id) > -1) {
         params.nodes = params.nodes.map(n => {
           if (n.startsWith(this.network_id.toLowerCase()))
             return n
@@ -756,6 +759,7 @@ export default {
 
     request_results: function (params, networks, loaded) {
       this.$http.get_local_scores(params).then(response => {
+        console.log(response)
         this.local_scores = response
         this.set_local_scores(networks, true, loaded)
       }).catch(err => console.error(err))
@@ -776,9 +780,7 @@ export default {
           setTimeout(() => this.request_cluster_values(params), 5000)
         }
       }).catch(err => console.error(err))
-    }
-    ,
-
+    },
 
     loadExample: function (id_space) {
       switch (id_space) {
@@ -787,6 +789,9 @@ export default {
           break;
         case 'ICD10':
           this.nodes = 'G30\nF02\nG10\nF02.2\nG12.2\nG35'
+          break;
+        case 'UMLS':
+          this.nodes = 'C0002395\nC0087012\nC0020179\nC0030567\nC0002736\nC0026769'
           break;
         case 'DrugBank':
           this.nodes = 'drugbank.DB00960\n' +
