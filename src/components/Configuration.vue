@@ -615,7 +615,7 @@ export default {
         )
         notification = notification.charAt(notification.length - 1) === "," ? notification.substring(0, notification.length - 1) : notification;
         this.notification.message = notification
-        this.notification.message = notify
+        this.notification.show = notify
       }
       for (let nw_idx in networks
           ) {
