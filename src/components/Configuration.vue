@@ -66,7 +66,7 @@
                             </v-chip>
                           </td>
                         </tr>
-                        <tr v-for="n in network.nodes"
+                        <tr v-for="n in network.nodes.filter(n=>n.group ==='missing')"
                             :key="'missing'+n.id">
                           <td>-</td>
                           <td>{{n.id }}</td>
