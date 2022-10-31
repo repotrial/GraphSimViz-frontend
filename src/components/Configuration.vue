@@ -50,22 +50,31 @@
                             {{ networkType_loaded === 'diseasome' ? 'Disease ID' : 'Drug ID' }}
                           </th>
                           <th>
-                            <span style="padding-left: 10px">P-value</span>
+                            <span style="padding-left: 10px">P-value<v-tooltip v-if="missing_nodes.length>0" right>
+                               <template v-slot:activator="{on, attrs}">
+                                    <v-icon style="top:-2px" color="warning">mdi-alert</v-icon>
+                                </template>
+                                <div style="width: 250px; text-align: justify">
+                                  Entries with N/A refer to the nodes that do not exist in at least one of the two networks.
+                                </div>
+                            </v-tooltip></span>
                           </th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="idx in local_scores[ged_variant].order"
-                            :key="'local'+idx">
-                          <td>{{ local_scores[ged_variant].names[idx] }}</td>
-                          <td>{{ local_scores[ged_variant].node[idx] }}</td>
-                          <td>
-                            <v-chip dark small
-                                    :color="get_significance_color(local_scores[ged_variant].local_p_value[idx])">
-                              {{ local_scores[ged_variant].local_p_value[idx].toExponential(3) }}
-                            </v-chip>
-                          </td>
-                        </tr>
+                        <template v-if="local_scores[ged_variant].order">
+                          <tr v-for="idx in local_scores[ged_variant].order"
+                              :key="'local'+idx">
+                            <td>{{ local_scores[ged_variant].names[idx] }}</td>
+                            <td>{{ local_scores[ged_variant].node[idx] }}</td>
+                            <td>
+                              <v-chip dark small
+                                      :color="get_significance_color(local_scores[ged_variant].local_p_value[idx])">
+                                {{ local_scores[ged_variant].local_p_value[idx].toExponential(3) }}
+                              </v-chip>
+                            </td>
+                          </tr>
+                        </template>
                         <tr v-for="id in missing_nodes"
                             :key="'missing'+id">
                           <td>-</td>
@@ -391,10 +400,10 @@
         </div>
       </div>
     </v-sheet>
-    <v-snackbar v-model="notification.show" :multi-line="true" :timeout="notification.timeout"
-                color="warning" dark>
-      {{ notification.message }}
-    </v-snackbar>
+    <!--    <v-snackbar v-model="notification.show" :multi-line="true" :timeout="notification.timeout"-->
+    <!--                color="warning" dark>-->
+    <!--      {{ notification.message }}-->
+    <!--    </v-snackbar>-->
   </div>
 </template>
 
@@ -593,7 +602,7 @@ export default {
       return this.groupConfig.nodeGroups[group].color
     },
 
-    convertNetworks: function (input, networks, notify) {
+    convertNetworks: function (input, networks) {
       let edge_map = {}
       let node_map = {}
       input.nodes.forEach(n => {
@@ -607,16 +616,16 @@ export default {
       })
       this.notification.message = ""
       this.missing_nodes = Object.values(node_map).filter(n => n.group === 'missing').map(n => n.id)
-      if (this.missing_nodes.length > 0) {
-        let notification = "The following IDs were not found in both selected networks and thus they are excluded from the network similarity calculations:"
-        this.missing_nodes.forEach(id => {
-              notification += " " + id + ","
-            }
-        )
-        notification = notification.charAt(notification.length - 1) === "," ? notification.substring(0, notification.length - 1) : notification;
-        this.notification.message = notification
-        this.notification.show = notify
-      }
+      // if (this.missing_nodes.length > 0) {
+      //   let notification = "The following IDs were not found in both selected networks and thus they are excluded from the network similarity calculations:"
+      //   this.missing_nodes.forEach(id => {
+      //         notification += " " + id + ","
+      //       }
+      //   )
+      //   notification = notification.charAt(notification.length - 1) === "," ? notification.substring(0, notification.length - 1) : notification;
+      //   this.notification.message = notification
+      //   this.notification.show = notify
+      // }
       for (let nw_idx in networks
           ) {
         let nw = networks[nw_idx]
@@ -762,11 +771,11 @@ export default {
       }
       this.networkType_loaded = this.networkType
       if (networks) {
-        this.convertNetworks(this.current_params, networks, true)
+        this.convertNetworks(this.current_params, networks)
       } else {
         this.$http.get_networks(this.current_params).then(response => {
           this.current_networks = response
-          this.convertNetworks(this.current_params, response, true)
+          this.convertNetworks(this.current_params, response)
         }).catch(console.error)
       }
       if (scroll)
@@ -775,7 +784,7 @@ export default {
     ,
 
     update_network: function () {
-      this.convertNetworks(this.current_params, this.current_networks, false)
+      this.convertNetworks(this.current_params, this.current_networks)
     }
     ,
 
