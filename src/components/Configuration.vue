@@ -66,19 +66,17 @@
                             </v-chip>
                           </td>
                         </tr>
-                        <template v-if="networks && networks.nodes">
-                          <tr v-for="n in network.nodes.filter(no=>no.group ==='missing')"
-                              :key="'missing'+n.id">
-                            <td>-</td>
-                            <td>{{ n.id }}</td>
-                            <td>
-                              <v-chip dark small
-                                      :color="groupConfig.nodeGroups.missing.color">
-                                N/A
-                              </v-chip>
-                            </td>
-                          </tr>
-                        </template>
+                        <tr v-for="id in missing_nodes"
+                            :key="'missing'+id">
+                          <td>-</td>
+                          <td>{{ id }}</td>
+                          <td>
+                            <v-chip dark small
+                                    :color="groupConfig.nodeGroups.missing.color">
+                              N/A
+                            </v-chip>
+                          </td>
+                        </tr>
                         </tbody>
                       </template>
                     </v-simple-table>
@@ -539,6 +537,7 @@ export default {
       },
       network: undefined,
       mwu: false,
+      missing_nodes: []
     }
   },
 
@@ -607,10 +606,10 @@ export default {
         node_map[n].label = scores.names[nid]
       })
       this.notification.message = ""
-      let missing_ids = input.nodes.filter(n => n.group === 'missing').map(n => n.id)
-      if (missing_ids.length > 0) {
+      this.missing_nodes = input.nodes.filter(n => n.group === 'missing').map(n => n.id)
+      if (this.missing_nodes.length > 0) {
         let notification = "The following IDs were not found in both selected networks and thus they are excluded from the network similarity calculations:"
-        missing_ids.forEach(id => {
+        this.missing_nodes.forEach(id => {
               notification += " " + id + ","
             }
         )
@@ -713,7 +712,7 @@ export default {
       this.cluster_scores = undefined
       this.global_scores = undefined
       this.network = undefined
-
+      this.missing_nodes = []
       this.results = true
 
       this.request_results(params, undefined, loaded)
