@@ -609,12 +609,12 @@ export default {
         node_map[n] = {id: n, label: n, group: 'missing'}
       })
       let scores = this.local_scores[this.ged_variant]
-      Object.keys(scores.node).forEach(nid => {
-        let n = scores.node[nid]
-        node_map[n].group = this.get_significance_group(scores.local_p_value[nid])
-        node_map[n].label = scores.names[nid]
-      })
-      this.notification.message = ""
+      if (scores)
+        Object.keys(scores.node).forEach(nid => {
+          let n = scores.node[nid]
+          node_map[n].group = this.get_significance_group(scores.local_p_value[nid])
+          node_map[n].label = scores.names[nid]
+        })
       this.missing_nodes = Object.values(node_map).filter(n => n.group === 'missing').map(n => n.id)
       // if (this.missing_nodes.length > 0) {
       //   let notification = "The following IDs were not found in both selected networks and thus they are excluded from the network similarity calculations:"
