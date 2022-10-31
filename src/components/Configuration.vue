@@ -66,6 +66,17 @@
                             </v-chip>
                           </td>
                         </tr>
+                        <tr v-for="n in network.nodes"
+                            :key="'missing'+n.id">
+                          <td>-</td>
+                          <td>{{n.id }}</td>
+                          <td>
+                            <v-chip dark small
+                                    :color="this.groupConfig.nodeGroups.missing.color">
+                              N/A
+                            </v-chip>
+                          </td>
+                        </tr>
                         </tbody>
                       </template>
                     </v-simple-table>
@@ -145,19 +156,16 @@
                       <template v-slot:label>
                         <v-tooltip right>
                           <template v-slot:activator="{on, attrs}">
-                            GED Variant
+                            GED Type
                             <v-icon v-bind="attrs" v-on="on" small right style="top: -2px">far fa-question-circle
                             </v-icon>
                           </template>
                           <div style="width: 300px; text-align: justify">
                             For Diseasome and Drugome comparisons three graph edit distance variants can be
                             displayed:<br>
-                            <!--                            'normalized_scores': 'Weight-based edit costs',-->
-                            <!--                            'normalized_ranks': 'Rank-based edit costs',-->
-                            <!--                            'topology_only': 'Uniform edit costs'-->
-                            <b>Uniform edit costs:</b> Topology only<br>
-                            <b>Rank-based edit costs:</b> Rank normalized<br>
-                            <b>Weight-based edit costs:</b> Score normalized
+                            <b>Uniform edit costs:</b> based only on topology<br>
+                            <b>Rank-based edit costs:</b> based on normalized edge ranks<br>
+                            <b>Weight-based edit costs:</b> based on normalized edge weights
                           </div>
                         </v-tooltip>
                       </template>
@@ -596,8 +604,20 @@ export default {
         node_map[n].group = this.get_significance_group(scores.local_p_value[nid])
         node_map[n].label = scores.names[nid]
       })
-
-      for (let nw_idx in networks) {
+      this.notification.message = ""
+      let missing_ids = input.nodes.filter(n => n.group === 'missing').map(n => n.id)
+      if (missing_ids.length > 0) {
+        let notification = "The following IDs were not found in both selected networks and thus they are excluded from the network similarity calculations:"
+        missing_ids.nodes.forEach(id => {
+              notification += " " + id + ","
+            }
+        )
+        notification = notification.charAt(notification.length - 1) === "," ? notification.substring(0, notification.length - 1) : notification;
+        this.notification.message = notification
+        this.notification.show = true
+      }
+      for (let nw_idx in networks
+          ) {
         let nw = networks[nw_idx]
         let node_map = nw.nodes
         let edges = nw.edges.map(e => {
@@ -635,7 +655,8 @@ export default {
         text += "\n"
       }
       this.execDownload(dlName, text)
-    },
+    }
+    ,
 
     downloadCluster: function (mwu) {
       let text = "#" + (this.networkType_loaded === 'diseasome' ? 'Disease ID' : 'Drug ID') + "\tCluster-level P-value" + "\n";
@@ -676,7 +697,7 @@ export default {
       if (this.nodes.length > 0)
         params.nodes = this.nodes.split("\n").map(e => e.trim()).filter(e => e.length > 0)
       this.current_params = params
-      if (['DrugBank', 'MONDO','UMLS'].indexOf(this.network_id) > -1) {
+      if (['DrugBank', 'MONDO', 'UMLS'].indexOf(this.network_id) > -1) {
         params.nodes = params.nodes.map(n => {
           if (n.startsWith(this.network_id.toLowerCase()))
             return n
@@ -759,7 +780,6 @@ export default {
 
     request_results: function (params, networks, loaded) {
       this.$http.get_local_scores(params).then(response => {
-        console.log(response)
         this.local_scores = response
         this.set_local_scores(networks, true, loaded)
       }).catch(err => console.error(err))
@@ -780,7 +800,8 @@ export default {
           setTimeout(() => this.request_cluster_values(params), 5000)
         }
       }).catch(err => console.error(err))
-    },
+    }
+    ,
 
     loadExample: function (id_space) {
       switch (id_space) {
