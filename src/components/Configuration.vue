@@ -52,7 +52,7 @@
                           <th>
                             <span style="padding-left: 10px">P-value<v-tooltip v-if="missing_nodes.length>0" right>
                                <template v-slot:activator="{on, attrs}">
-                                    <v-icon style="top:-2px" color="warning">mdi-alert</v-icon>
+                                    <v-icon v-on="on" v-bind="attrs" style="top:-2px" color="warning">mdi-alert</v-icon>
                                 </template>
                                 <div style="width: 250px; text-align: justify">
                                   Entries with N/A refer to the nodes that do not exist in at least one of the two networks.
