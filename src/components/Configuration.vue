@@ -785,7 +785,8 @@ export default {
         this.local_scores = response
         this.set_local_scores(networks, true, loaded)
       }).catch(err => console.error(err))
-      this.ged_variant = 'topology_only';
+      if (this.networkType === 'drug-disease')
+        this.ged_variant = 'topology_only';
       this.$http.get_global_scores(params).then(response => {
         let global_score_measure = this.mwu ? 'mwu_p_values' : 'empirical_p_values'
         this.global_scores = response[global_score_measure]
@@ -799,7 +800,7 @@ export default {
         if (response.done || response.error) {
           this.cluster_scores = response.result
         } else {
-          setTimeout(() => this.request_cluster_values(params), 5000)
+          setTimeout(() => this.request_cluster_values(params), 8000)
         }
       }).catch(err => console.error(err))
     }
