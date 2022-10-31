@@ -606,7 +606,7 @@ export default {
         node_map[n].label = scores.names[nid]
       })
       this.notification.message = ""
-      this.missing_nodes = input.nodes.filter(n => n.group === 'missing').map(n => n.id)
+      this.missing_nodes = Object.values(node_map).filter(n => n.group === 'missing').map(n => n.id)
       if (this.missing_nodes.length > 0) {
         let notification = "The following IDs were not found in both selected networks and thus they are excluded from the network similarity calculations:"
         this.missing_nodes.forEach(id => {
