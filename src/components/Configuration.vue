@@ -72,7 +72,7 @@
                           <td>{{n.id }}</td>
                           <td>
                             <v-chip dark small
-                                    :color="this.groupConfig.nodeGroups.missing.color">
+                                    :color="groupConfig.nodeGroups.missing.color">
                               N/A
                             </v-chip>
                           </td>
