@@ -593,7 +593,7 @@ export default {
       return this.groupConfig.nodeGroups[group].color
     },
 
-    convertNetworks: function (input, networks) {
+    convertNetworks: function (input, networks, notify) {
       let edge_map = {}
       let node_map = {}
       input.nodes.forEach(n => {
@@ -615,6 +615,7 @@ export default {
         )
         notification = notification.charAt(notification.length - 1) === "," ? notification.substring(0, notification.length - 1) : notification;
         this.notification.message = notification
+        this.notification.message = notify
       }
       for (let nw_idx in networks
           ) {
@@ -761,14 +762,12 @@ export default {
       }
       this.networkType_loaded = this.networkType
       if (networks) {
-        this.convertNetworks(this.current_params, networks)
+        this.convertNetworks(this.current_params, networks, true)
       } else {
         this.$http.get_networks(this.current_params).then(response => {
           this.current_networks = response
-          this.convertNetworks(this.current_params, response)
+          this.convertNetworks(this.current_params, response, true)
         }).catch(console.error)
-        if (this.notification.message.length > 0)
-          this.notification.show = true
       }
       if (scroll)
         this.scrollUp(loaded)
@@ -776,7 +775,7 @@ export default {
     ,
 
     update_network: function () {
-      this.convertNetworks(this.current_params, this.current_networks)
+      this.convertNetworks(this.current_params, this.current_networks, false)
     }
     ,
 
