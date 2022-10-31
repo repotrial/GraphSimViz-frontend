@@ -66,7 +66,7 @@
                             </v-chip>
                           </td>
                         </tr>
-                        <tr v-for="n in network.nodes.filter(n=>n.group ==='missing')"
+                        <tr v-if="networks.nodes" v-for="n in network.nodes.filter(no=>no.group ==='missing')"
                             :key="'missing'+n.id">
                           <td>-</td>
                           <td>{{n.id }}</td>
@@ -608,7 +608,7 @@ export default {
       let missing_ids = input.nodes.filter(n => n.group === 'missing').map(n => n.id)
       if (missing_ids.length > 0) {
         let notification = "The following IDs were not found in both selected networks and thus they are excluded from the network similarity calculations:"
-        missing_ids.nodes.forEach(id => {
+        missing_ids.forEach(id => {
               notification += " " + id + ","
             }
         )
