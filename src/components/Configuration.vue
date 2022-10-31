@@ -615,8 +615,6 @@ export default {
         )
         notification = notification.charAt(notification.length - 1) === "," ? notification.substring(0, notification.length - 1) : notification;
         this.notification.message = notification
-        this.notification.show = true
-        console.log(this.notification.message)
       }
       for (let nw_idx in networks
           ) {
@@ -769,6 +767,8 @@ export default {
           this.current_networks = response
           this.convertNetworks(this.current_params, response)
         }).catch(console.error)
+        if (this.notification.message.length > 0)
+          this.notification.show = true
       }
       if (scroll)
         this.scrollUp(loaded)
