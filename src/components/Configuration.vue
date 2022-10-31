@@ -62,7 +62,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <template v-if="local_scores[ged_variant].order">
+                        <template v-if="local_scores[ged_variant]">
                           <tr v-for="idx in local_scores[ged_variant].order"
                               :key="'local'+idx">
                             <td>{{ local_scores[ged_variant].names[idx] }}</td>
@@ -767,6 +767,7 @@ export default {
           names[nid] = 'D' + (Object.keys(names).length + 1)
         })
         this.local_scores[distance_type].names = names
+        console.log(this.local_scores[distance_type])
         this.local_scores[distance_type].order = nid_order
       }
       this.networkType_loaded = this.networkType
