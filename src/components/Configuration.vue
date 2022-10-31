@@ -66,17 +66,19 @@
                             </v-chip>
                           </td>
                         </tr>
-                        <tr v-if="networks.nodes" v-for="n in network.nodes.filter(no=>no.group ==='missing')"
-                            :key="'missing'+n.id">
-                          <td>-</td>
-                          <td>{{n.id }}</td>
-                          <td>
-                            <v-chip dark small
-                                    :color="groupConfig.nodeGroups.missing.color">
-                              N/A
-                            </v-chip>
-                          </td>
-                        </tr>
+                        <template v-if="networks && networks.nodes">
+                          <tr v-for="n in network.nodes.filter(no=>no.group ==='missing')"
+                              :key="'missing'+n.id">
+                            <td>-</td>
+                            <td>{{ n.id }}</td>
+                            <td>
+                              <v-chip dark small
+                                      :color="groupConfig.nodeGroups.missing.color">
+                                N/A
+                              </v-chip>
+                            </td>
+                          </tr>
+                        </template>
                         </tbody>
                       </template>
                     </v-simple-table>
