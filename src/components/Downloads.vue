@@ -1,8 +1,23 @@
 <template>
   <div>
-    <div style="background-color: cornflowerblue; width: 100%; padding:16px">
-      <h2 :style="{display: 'flex', 'justify-content': 'center', color: 'white', 'font-size': mobile ? '2.5rem' : '4rem'}">
-        Documentation</h2>
+    <div style="background-color: #ffbd8e; width: 100%; padding:16px">
+      <h2 :style="{display: 'flex', 'justify-content': 'center', color: '#2d105f', 'font-size': mobile ? '2.5rem' : '4rem'}">
+        Downloads</h2>
+    </div>
+    <div :style="{padding: mobile ? '32px 16px' : '32px 64px'}">
+
+
+      <b style="font-size: 1.5rem">Results</b>
+      <div style="margin-top: 16px; margin-bottom: 32px">
+        <div style="text-align: justify-all">
+          All the result files for disease and drug network similarity analyses
+          of this tool and of the corresponding publication can be acquired by
+          downloading from our server using the following URL: <a
+            href="https://api.graphsimviz.net/download_results">https://api.graphsimviz.net/download_results</a> <br>The
+          archive <code>results.zip</code> contains individual archives for each pairwise network comparison per disease
+          namespace (vocabulary) including MONDO, UMLS CUI, and ICD-10.
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -17,9 +32,6 @@ export default {
     }
   },
   methods: {
-    getAnchor: function (anchor) {
-      return "/documentation#" + anchor
-    },
     isMobile: function () {
       let check = false;
       (function (a) {

@@ -7,9 +7,9 @@
           <v-btn depressed plain @click="checkRouting()">
             <router-link style="text-decoration: none" to="/">Home</router-link>
           </v-btn>
-<!--          <v-btn depressed plain>-->
-<!--            <router-link style="text-decoration: none" to="/documentation">Documentation</router-link>-->
-<!--          </v-btn>-->
+          <v-btn depressed plain>
+            <router-link style="text-decoration: none" to="/downloads">Downloads</router-link>
+          </v-btn>
           <v-btn depressed plain>
             <router-link style="text-decoration: none" to="/about">About</router-link>
           </v-btn>

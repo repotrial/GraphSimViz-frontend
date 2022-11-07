@@ -2,7 +2,7 @@
 import Router from "vue-router";
 import * as CONFIG from "./Config"
 import Validation from "@/components/Validation";
-import Documentation from "@/components/Documentation";
+import Downloads from "@/components/Downloads";
 import About from "@/components/About";
 const router = new Router({
         mode: "history",
@@ -13,7 +13,7 @@ const router = new Router({
             {path: "/", component: Validation},
             // {path: "/configure", component: Validation},
             // {path: "/result", component: Validation},
-            {path:"/documentation", component:Documentation},
+            {path:"/downloads", component:Downloads},
             {path:"/about", component:About}
         ]
     },
