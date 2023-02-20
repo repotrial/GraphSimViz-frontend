@@ -15,7 +15,7 @@
           <br><br>
           All the result files for disease and drug network similarity analyses of this tool and of the corresponding publication can be downloaded from the following URL:<br>
           <a href="https://api.graphsimviz.net/download_data">https://api.graphsimviz.net/download_data</a><br>
-          The result files can be used to reproduce the plots as explained in the corresponding github repository.
+          The result files can be used to reproduce the plots as explained in the corresponding <a href="https://github.com/repotrial/graphsimqt">github repository</a>.
         </div>
       </div>
     </div>
