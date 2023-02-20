@@ -13,9 +13,12 @@
           All the result files for disease and drug network similarity analyses
           of this tool and of the corresponding publication can be acquired by
           downloading from our server using the following URL: <a
-            href="https://api.graphsimviz.net/download_results">https://api.graphsimviz.net/download_results</a> <br>The
+            href="https://api.graphsimviz.net/download_data">https://api.graphsimviz.net/download_data</a> <br>The
           archive <code>results.zip</code> contains individual archives for each pairwise network comparison per disease
           namespace (vocabulary) including MONDO, UMLS CUI, and ICD-10.
+          <br><br>
+          Figures and material of the paper can be downloaded from <a
+            href="https://api.graphsimviz.net/download_results">https://api.graphsimviz.net/download_results</a>
         </div>
       </div>
     </div>
