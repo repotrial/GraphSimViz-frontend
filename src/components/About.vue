@@ -23,13 +23,10 @@
         </div>
       </div>
       <b style="font-size: 1.5rem">Cite</b>
-      <div style="margin-top: 16px; margin-bottom: 64px"><i>Will be added once available</i>:
-<!--        <div style="margin: 16px 64px">Klaudia Adamowicz, Andreas Maier, Jan Baumbach, David B Blumenthal, Online <i>in-->
-<!--          silico</i>-->
-<!--          validation of disease and gene sets, clusterings or subnetworks with DIGEST. <i>Briefings in-->
-<!--            Bioinformatics</i>, Volume 23, Issue 4, July 2022, bbac247.-->
-<!--          <a href="https://doi.org/10.1093/BIB/BBAC247">https://doi.org/10.1093/BIB/BBAC247</a>-->
-<!--        </div>-->
+      <div style="margin-top: 16px; margin-bottom: 64px; text-align: justify">
+        <div style="margin: 16px 64px">Sepideh Sadegh, James Skelton, Elisa Anastasi, Andreas Maier, Klaudia Adamowicz, Anna Möller, Nils M. Kriege, Jaanika Kronberg, Toomas Haller, Tim Kacprowski, Anil Wipat, Jan Baumbach & David B. Blumenthal, Lacking mechanistic disease definitions and corresponding association data hamper progress in network medicine and beyond. <i>Nature Communications</i> <b>14</b>, 1662 (2023).
+          <a href="https://doi.org/10.1038/s41467-023-37349-4">https://doi.org/10.1038/s41467-023-37349-4</a>
+        </div>
       </div>
       <b style="justify-content: center; display: flex;font-size: 1.25rem; color: #484848">Impressum</b>
       <div style="height: .85rem"></div>
