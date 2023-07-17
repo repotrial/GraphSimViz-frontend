@@ -11,7 +11,8 @@ COPY docker/Config.js src/Config.js
 RUN npm run build
 
 FROM nginx:alpine as production-stage
-RUN apt update && apt upgrade -y
+RUN apk add --upgrade apk-tools
+RUn apk upgrade --available
 WORKDIR /usr/app
 
 COPY --from=build-stage /app/dist /usr/share/nginx/html/
