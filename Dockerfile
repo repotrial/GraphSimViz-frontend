@@ -10,7 +10,7 @@ COPY docker/Config.js src/Config.js
 
 RUN npm run build
 
-FROM nginx:latest as production-stage
+FROM nginx:alpine as production-stage
 RUN apt update && apt upgrade -y
 WORKDIR /usr/app
 
