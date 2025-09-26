@@ -14,7 +14,7 @@
     "@fortawesome/vue-fontawesome": "^2.0.0",
     "material-design-icons-iconfont": "^6.1.0",
     "@mdi/font": "^6.5.95",
-    "axios": "^1.8.2",
+    "axios": "^1.12.0",
     "core-js": "^3.6.5",
     "vue": "^2.6.11",
     "vue-router": "^3.5.3",
@@ -40,7 +40,10 @@
     "@vue/cli-service": {
       "webpack-dev-server": "4.9.0"
     },
-    "@babel/traverse": ">=7.23.2"
+    "@babel/traverse": ">=7.23.2",
+    "form-data": ">=4.0.4",
+    "postcss": ">=8.4.31",
+    "on-headers": ">=1.1.0"
   },
   "eslintConfig": {
     "root": true,
