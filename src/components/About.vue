@@ -12,7 +12,7 @@
           <v-btn icon><a style="text-decoration: none" :href="'mailto:'+getSSMail()">
             <v-icon>mdi-email-edit</v-icon>
           </a></v-btn>
-          sepideh.sadegh(_at-]uni-hamburg.de
+          ssadegh(_at-]health.sdu.dk
         </div>
         <div>
           <v-btn icon><a style="text-decoration: none" :href="'mailto:'+getDBMail()">
