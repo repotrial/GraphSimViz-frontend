@@ -1,7 +1,4 @@
-const HOST = "localhost"
-export const CONTEXT_PATH="/"
-export const BACKEND_PORT= "8012"
-export const HOST_URL = "http://" + HOST + ":" + BACKEND_PORT
-//export const SOCKET_URL = "http://" + HOST + ":8090"
-export const PATH_PREFIX= ""
-export const STATIC_PATH="/static/"
+export const CONTEXT_PATH = import.meta.env.VITE_CONTEXT_PATH || "/"
+export const HOST_URL = import.meta.env.VITE_HOST_URL || "http://localhost:8012"
+export const PATH_PREFIX = import.meta.env.VITE_PATH_PREFIX || ""
+export const STATIC_PATH = import.meta.env.VITE_STATIC_PATH || "/static/"

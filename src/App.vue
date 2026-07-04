@@ -1,18 +1,12 @@
 <template>
   <v-app>
     <v-main>
-      <v-toolbar elevation="4" dense :style="{'padding-left': isMobile()? '0': '15vw', 'padding-right': isMobile()? '5vw':'15vw', position: 'fixed', 'z-index': 1000, width: '100%'}">
+      <v-toolbar color="white" elevation="4" density="compact" :style="{'padding-left': isMobile()? '0': '15vw', 'padding-right': isMobile()? '5vw':'15vw', position: 'fixed', 'z-index': 1000, width: '100%'}">
           <v-toolbar-title v-if="!isMobile()" style="cursor:pointer;" @click="$router.push('/'); $router.go()">GraphSimVisualizer</v-toolbar-title>
           <v-spacer v-if="!isMobile()"></v-spacer>
-          <v-btn depressed plain @click="checkRouting()">
-            <router-link style="text-decoration: none" to="/">Home</router-link>
-          </v-btn>
-          <v-btn depressed plain>
-            <router-link style="text-decoration: none" to="/downloads">Downloads</router-link>
-          </v-btn>
-          <v-btn depressed plain>
-            <router-link style="text-decoration: none" to="/about">About</router-link>
-          </v-btn>
+          <v-btn variant="plain" color="#2d105f" to="/" @click="checkRouting()">Home</v-btn>
+          <v-btn variant="plain" color="#2d105f" to="/downloads">Downloads</v-btn>
+          <v-btn variant="plain" color="#2d105f" to="/about">About</v-btn>
       </v-toolbar>
       <v-card v-if="isMobile()" style="min-height: 100vh; top: 60px">
         <router-view></router-view>
@@ -70,5 +64,8 @@ export default {
 }
 .v-text-field .v-label{
   text-overflow: unset !important;
+}
+.v-label {
+  opacity: var(--v-medium-emphasis-opacity, 0.6);
 }
 </style>

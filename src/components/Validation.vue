@@ -23,7 +23,7 @@
 
 <script>
 
-import Configuration from "@/components/Configuration";
+import Configuration from "@/components/Configuration.vue";
 
 export default {
 

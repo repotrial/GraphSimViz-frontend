@@ -26,10 +26,10 @@
                   <v-row justify="center">
                   <span style="color: #858585">
                   <b>Local empirical P-values</b>
-                    <v-icon v-if="!local_scores" right style="top:-2px">mdi-cog fa-spin</v-icon>
+                    <v-icon v-if="!local_scores" class="ms-1" style="top:-2px">mdi-cog fa-spin</v-icon>
                     <v-tooltip right>
-                    <template v-slot:activator="{on, attrs}">
-                    <v-btn @click="downloadLocal()" v-show="local_scores" icon right small v-bind="attrs" v-on="on"><v-icon
+                    <template v-slot:activator="{props}">
+                    <v-btn @click="downloadLocal()" v-show="local_scores" icon variant="text" size="small" v-bind="props"><v-icon
                         style="top:-2px">mdi-download</v-icon></v-btn>
                     </template>
                     <div style="width: 250px; text-align: justify">
@@ -39,20 +39,20 @@
                     </span>
                   </v-row>
                   <v-row justify="center" v-if="local_scores">
-                    <v-simple-table dense style="margin-top: 8px;" fixed-header height="280px">
+                    <v-table density="compact" style="margin-top: 8px;" fixed-header height="280px">
                       <template v-slot:default>
                         <thead>
                         <tr>
-                          <th>
+                          <th style="color: #858585; font-weight: bold; font-size: 0.85rem">
                             Label
                           </th>
-                          <th>
+                          <th style="color: #858585; font-weight: bold; font-size: 0.85rem">
                             {{ networkType_loaded === 'diseasome' ? 'Disease ID' : 'Drug ID' }}
                           </th>
-                          <th>
+                          <th style="color: #858585; font-weight: bold; font-size: 0.85rem">
                             <span style="padding-left: 10px">P-value<v-tooltip v-if="missing_nodes.length>0" right>
-                               <template v-slot:activator="{on, attrs}">
-                                    <v-icon v-on="on" v-bind="attrs" style="top:-2px" color="warning">mdi-alert</v-icon>
+                               <template v-slot:activator="{props}">
+                                    <v-icon v-bind="props" style="top:-2px" color="warning">mdi-alert</v-icon>
                                 </template>
                                 <div style="width: 250px; text-align: justify">
                                   Entries with N/A refer to the nodes that do not exist in at least one of the two networks.
@@ -68,7 +68,7 @@
                             <td>{{ local_scores[ged_variant].names[idx] }}</td>
                             <td>{{ local_scores[ged_variant].node[idx] }}</td>
                             <td>
-                              <v-chip dark small
+                              <v-chip theme="dark" size="small"
                                       :color="get_significance_color(local_scores[ged_variant].local_p_value[idx])">
                                 {{ local_scores[ged_variant].local_p_value[idx].toExponential(3) }}
                               </v-chip>
@@ -80,7 +80,7 @@
                           <td>-</td>
                           <td>{{ id }}</td>
                           <td>
-                            <v-chip dark small
+                            <v-chip theme="dark" size="small"
                                     :color="groupConfig.nodeGroups.missing.color">
                               N/A
                             </v-chip>
@@ -88,7 +88,7 @@
                         </tr>
                         </tbody>
                       </template>
-                    </v-simple-table>
+                    </v-table>
                   </v-row>
                 </v-container>
               </v-col>
@@ -97,7 +97,7 @@
                   <v-row justify="center">
                   <span style="color: #858585">
                   <b>
-                  Cluster-level {{ mwu ? ' MWU' : '' }} P-value</b><v-icon v-if="!cluster_scores" right
+                  Cluster-level {{ mwu ? ' MWU' : '' }} P-value</b><v-icon v-if="!cluster_scores" class="ms-1"
                                                                            style="top:-2px">mdi-cog fa-spin</v-icon>
                     <!--                    <v-btn-->
                     <!--                      @click="downloadCluster(mwu)" v-else icon right small>-->
@@ -106,9 +106,8 @@
 
 
                     <v-tooltip right>
-                      <template v-slot:activator="{on, attrs}">
-                        <v-btn @click="downloadCluster(mwu)" v-show="cluster_scores" icon right small v-bind="attrs"
-                               v-on="on"><v-icon
+                      <template v-slot:activator="{props}">
+                        <v-btn @click="downloadCluster(mwu)" v-show="cluster_scores" icon variant="text" size="small" v-bind="props"><v-icon
                             style="top:-2px">mdi-download</v-icon></v-btn>
                       </template>
                       <div style="width: 250px; text-align: justify">
@@ -118,7 +117,7 @@
                     </span>
                   </v-row>
                   <v-row justify="center" v-if="cluster_scores">
-                    <v-chip dark small style="margin-top: 8px"
+                    <v-chip theme="dark" size="small" style="margin-top: 8px"
                             :color="get_significance_color(Object.values(Object.values(cluster_scores)[1])[Object.values(Object.values(cluster_scores)[0]).indexOf(ged_variant)])">
                       {{
                         Object.values(Object.values(cluster_scores)[1])[Object.values(Object.values(cluster_scores)[0]).indexOf(ged_variant)].toExponential(3)
@@ -129,16 +128,15 @@
                   <span style="color: #858585">
                   <b>
                   Global {{ mwu ? "MWU" : "empirical" }} P-value</b>
-                    <v-icon v-if="!global_scores" right style="top:-2px">mdi-cog fa-spin</v-icon>
+                    <v-icon v-if="!global_scores" class="ms-1" style="top:-2px">mdi-cog fa-spin</v-icon>
                     <!--                    <v-btn-->
                     <!--                      @click="downloadGlobal(mwu)" v-else icon right small><v-icon-->
                     <!--                      style="top:-2px">mdi-download</v-icon></v-btn>-->
 
 
                      <v-tooltip right>
-                    <template v-slot:activator="{on, attrs}">
-                    <v-btn @click="downloadGlobal(mwu)" v-show="global_scores" icon right small v-bind="attrs"
-                           v-on="on"><v-icon
+                    <template v-slot:activator="{props}">
+                    <v-btn @click="downloadGlobal(mwu)" v-show="global_scores" icon variant="text" size="small" v-bind="props"><v-icon
                         style="top:-2px">mdi-download</v-icon></v-btn>
                     </template>
                     <div style="width: 250px; text-align: justify">
@@ -151,7 +149,7 @@
                   </v-row>
 
                   <v-row v-if="global_scores" justify="center">
-                    <v-chip dark small style="margin-top: 8px"
+                    <v-chip theme="dark" size="small" style="margin-top: 8px"
                             :color="get_significance_color(Object.values(Object.values(global_scores)[1])[Object.values(Object.values(global_scores)[0]).indexOf(ged_variant)])">
                       {{
                         Object.values(Object.values(global_scores)[1])[Object.values(Object.values(global_scores)[0]).indexOf(ged_variant)].toExponential(3)
@@ -159,14 +157,15 @@
                     </v-chip>
                   </v-row>
                   <v-row justify="center" style="margin-top: 64px">
-                    <v-select v-if="global_scores" dense @change="update_network()"
+                    <v-select v-if="global_scores" variant="underlined" density="compact" @change="update_network()"
                               :items="Object.values(Object.values(global_scores)[0]).map(k=>{return{text: map_names(k), value:k}})"
-                              style="max-width: 250px" append-icon="mdi-menu-down" v-model="ged_variant">
+                              item-title="text"
+                              style="max-width: 250px" v-model="ged_variant">
                       <template v-slot:label>
                         <v-tooltip right>
-                          <template v-slot:activator="{on, attrs}">
+                          <template v-slot:activator="{props}">
                             GED Type
-                            <v-icon v-bind="attrs" v-on="on" small right style="top: -2px">far fa-question-circle
+                            <v-icon v-bind="props" size="small" class="ms-1" style="top: -2px">fa:far fa-question-circle
                             </v-icon>
                           </template>
                           <div style="width: 300px; text-align: justify">
@@ -187,27 +186,27 @@
         </template>
       </div>
       <div style="width: 100%">
-        <v-container :class="{border_mobile:mobile, border:!mobile}">
+        <v-container :class="{gsv_pad_mobile:mobile, gsv_pad:!mobile}">
           <v-row justify-content="center">
 
             <v-col cols="12" lg="4" :class="{'flex_content_center':mobile}">
               <div style="display: flex; justify-content: center">
-                <v-subheader :class="{sh_mobile:mobile, sh:!mobile}" style="margin-bottom: 0; padding-bottom: 0;">
+                <v-list-subheader :class="{sh_mobile:mobile, sh:!mobile}" style="margin-bottom: 0; padding-bottom: 0;">
                   1. Network
-                </v-subheader>
+                </v-list-subheader>
               </div>
               <v-container style="padding-top: 16px">
                 <v-row justify="start" justify-lg="center">
                   <v-col class="flex_content_center">
-                    <v-radio-group v-model="networkType" @change="unsetConfig(2)" dense
+                    <v-radio-group v-model="networkType" @change="unsetConfig(2)" color="primary" density="compact"
                                    style="margin-top: 0; padding-top: 0">
                       <v-radio v-for="t of networkTypes" :key="'nw_'+t.value" :label="t.text" :value="t.value">
                       </v-radio>
                       <template v-slot:label>
                         <v-tooltip right>
-                          <template v-slot:activator="{on, attrs}">
+                          <template v-slot:activator="{props}">
                             General network
-                            <v-icon style="top: -2px" small right v-bind="attrs" v-on="on">far fa-question-circle
+                            <v-icon style="top: -2px" size="small" class="ms-1" v-bind="props">fa:far fa-question-circle
                             </v-icon>
                           </template>
                           <div style="width: 350px; text-align: justify">
@@ -226,14 +225,14 @@
             <v-divider vertical style="margin-top: 16px; margin-bottom: 16px"></v-divider>
             <v-col cols="12" lg="8" :class="{'flex_content_center':mobile}">
               <div style="display: flex; justify-content: center">
-                <v-subheader :class="{sh_mobile:mobile, sh:!mobile}" style="margin-bottom: 0; padding-bottom: 0">2.
+                <v-list-subheader :class="{sh_mobile:mobile, sh:!mobile}" style="margin-bottom: 0; padding-bottom: 0">2.
                   Edges
-                </v-subheader>
+                </v-list-subheader>
               </div>
               <v-container style="padding-top: 16px">
                 <v-row justify="center" justify-lg="start">
                   <v-col cols="12" md="5" lg="5" class="flex_content_center">
-                    <v-radio-group v-model="network1" @change="unsetConfig(3)" dense
+                    <v-radio-group v-model="network1" @change="unsetConfig(3)" color="primary" density="compact"
                                    style="margin-top: 0; padding-top: 0">
                       <v-radio
                           v-for="t of networks[networkType].filter(e=> networks[networkType].length >2 || (network2 == null || e.value !== network2))"
@@ -242,9 +241,9 @@
                       </v-radio>
                       <template v-slot:label>
                         <v-tooltip right>
-                          <template v-slot:activator="{on, attrs}">
+                          <template v-slot:activator="{props}">
                             Network 1
-                            <v-icon style="top: -2px" small right v-bind="attrs" v-on="on">far fa-question-circle
+                            <v-icon style="top: -2px" size="small" class="ms-1" v-bind="props">fa:far fa-question-circle
                             </v-icon>
                           </template>
                           <div style="width: 250px; text-align: justify">
@@ -259,7 +258,7 @@
                     <v-divider vertical></v-divider>
                   </v-col>
                   <v-col cols="12" md="5" lg="5" class="flex_content_center">
-                    <v-radio-group v-model="network2" @change="unsetConfig(3)" dense
+                    <v-radio-group v-model="network2" @change="unsetConfig(3)" color="primary" density="compact"
                                    style="margin-top: 0; padding-top: 0">
                       <v-radio
                           v-for="t of networks[networkType].filter(e=> networks[networkType].length >2 || (network1 == null || e.value !== network1))"
@@ -268,9 +267,9 @@
                       </v-radio>
                       <template v-slot:label>
                         <v-tooltip right>
-                          <template v-slot:activator="{on, attrs}">
+                          <template v-slot:activator="{props}">
                             Network 2
-                            <v-icon style="top: -2px" small right v-bind="attrs" v-on="on">far fa-question-circle
+                            <v-icon style="top: -2px" size="small" class="ms-1" v-bind="props">fa:far fa-question-circle
                             </v-icon>
                           </template>
                           <div style="width: 250px; text-align: justify">
@@ -289,11 +288,10 @@
         </v-container>
         <v-divider style="margin-left: 32px; margin-right: 32px"></v-divider>
 
-        <template>
           <div style="display: flex; justify-content: center">
-            <v-subheader :class="{sh_mobile:mobile, sh:!mobile}">3. Nodes</v-subheader>
+            <v-list-subheader :class="{sh_mobile:mobile, sh:!mobile}">3. Nodes</v-list-subheader>
           </div>
-          <v-container :class="{border_mobile:mobile, border:!mobile}">
+          <v-container :class="{gsv_pad_mobile:mobile, gsv_pad:!mobile}">
             <v-row justify="center">
               <v-col cols=12>
                 <div>
@@ -301,17 +299,18 @@
                     <v-row>
                       <v-col cols=12 md=8>
                         <v-select
-                            append-icon="mdi-menu-down"
+                            variant="underlined"
                             :items="(network1 && network2 && (network1.indexOf('comorbidity') > -1 || network2.indexOf('comorbidity')> -1))? [{value: 'ICD10', text: 'ICD10'}] : network_ids[networkType]"
+                            item-title="text"
                             v-model="network_id" @change="unsetConfig(4)"
-                            style="max-width: 210px; min-width: 210px" dense hide-details
+                            style="max-width: 210px; min-width: 210px" density="compact" hide-details
                             :disabled="networkType ==='drugome'"
                         >
                           <template v-slot:label>
                             <v-tooltip right>
-                              <template v-slot:activator="{on, attrs}">
+                              <template v-slot:activator="{props}">
                                 {{ (networkType === 'drugome' ? 'Drug ' : 'Disease ') + 'ID Space' }}
-                                <v-icon v-bind="attrs" v-on="on" small right style="top: -2px">far fa-question-circle
+                                <v-icon v-bind="props" size="small" class="ms-1" style="top: -2px">fa:far fa-question-circle
                                 </v-icon>
                               </template>
                               <div style="width: 250px; text-align: justify">
@@ -324,9 +323,9 @@
                         </v-select>
                       </v-col>
                       <v-col cols=12 md=4 class="flex_content_end">
-                        <v-btn outlined :disabled="!network_id"
+                        <v-btn variant="outlined" :disabled="!network_id"
                                @click="loadExample(network_id)">
-                          <v-icon left>mdi-download-multiple</v-icon>
+                          <v-icon class="me-1">mdi-download-multiple</v-icon>
                           Example
                         </v-btn>
                       </v-col>
@@ -338,7 +337,7 @@
                             :class="{ 'ta_mobile':mobile }"
                             no-resize
                             :disabled="!network_id"
-                            outlined
+                            variant="outlined"
                             label="Node IDs"
                             hint="Please enter a newline separated list of node ids in the selected ID space or use the
                                 example button to add some examples. MONDO, UMLS and DrugBank IDs entries can have the
@@ -352,28 +351,26 @@
               </v-col>
             </v-row>
           </v-container>
-        </template>
         <v-divider style="margin-left: 32px; margin-right: 32px"></v-divider>
 
-        <template>
           <div style="display: flex; justify-content: center">
-            <v-subheader :class="{sh_mobile:mobile, sh:!mobile}" style="margin-bottom: 0; padding-bottom: 0">4.
+            <v-list-subheader :class="{sh_mobile:mobile, sh:!mobile}" style="margin-bottom: 0; padding-bottom: 0">4.
               Optional
-            </v-subheader>
+            </v-list-subheader>
           </div>
-          <v-container :class="{border_mobile:mobile, border:!mobile}">
+          <v-container :class="{gsv_pad_mobile:mobile, gsv_pad:!mobile}">
             <v-row justify="center">
-              <v-col cols="4" md="12" style="padding-top: 0">
+              <v-col cols="12" md="12" style="padding-top: 0">
                 <div>
                   <v-container>
                     <v-row>
                       <v-col cols="8" style="padding-top: 0">
-                        <v-switch style="margin-top: 0;" v-model="mwu">
+                        <v-switch style="margin-top: 0;" color="primary" v-model="mwu">
                           <template v-slot:label>
                             <v-tooltip right>
-                              <template v-slot:activator="{on, attrs}">
+                              <template v-slot:activator="{props}">
                                 Use MWU
-                                <v-icon v-bind="attrs" v-on="on" small right style="top: -2px">far fa-question-circle
+                                <v-icon v-bind="props" size="small" class="ms-1" style="top: -2px">fa:far fa-question-circle
                                 </v-icon>
                               </template>
                               <div style="width: 250px; text-align: justify">
@@ -390,12 +387,11 @@
             </v-row>
           </v-container>
           <v-divider style="margin-left: 32px; margin-right: 32px"></v-divider>
-        </template>
         <div style="display: flex; margin:8px">
           <v-btn color="primary" @click="checkEvent(true)" :disabled="!(network1 && network2 && network_id)"
                  style="margin-left: auto; margin-right: auto; justify-self: center">
             Visualize
-            <v-icon right>mdi-chevron-right</v-icon>
+            <v-icon class="ms-1">mdi-chevron-right</v-icon>
           </v-btn>
         </div>
       </div>
@@ -877,7 +873,7 @@ export default {
 
 <style scoped lang="sass">
 
-.v-subheader
+.v-list-subheader
   margin: 8px
 
 .flex
@@ -924,6 +920,10 @@ export default {
 
 .sh_mobile
   font-size: 1.2rem
+  :deep(.v-list-subheader__text)
+    height: auto
+    line-height: normal
+    overflow: visible
 
 .ta_mobile
   padding: 0
@@ -938,16 +938,20 @@ export default {
   font-size: 1.5rem
   margin-left: 64px
   margin-right: 64px
+  :deep(.v-list-subheader__text)
+    height: auto
+    line-height: normal
+    overflow: visible
 
 .margin_normal
   padding-left: 64px
   padding-right: 64px
 
-.border
+.gsv_pad
   padding-right: 64px
   padding-left: 64px
 
-.border_mobile
+.gsv_pad_mobile
   padding-right: 16px
   padding-left: 16px
 
@@ -955,7 +959,7 @@ export default {
   padding-left: 8px
   padding-right: 8px
 
-.v-subheader
+.v-list-subheader
   white-space: nowrap
 
 

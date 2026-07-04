@@ -9,13 +9,13 @@
       <b style="font-size: 1.5rem">Contact</b>
       <div style="margin-top: 16px; margin-bottom: 32px">
         <div>
-          <v-btn icon><a style="text-decoration: none" :href="'mailto:'+getSSMail()">
+          <v-btn icon variant="text"><a style="text-decoration: none" :href="'mailto:'+getSSMail()">
             <v-icon>mdi-email-edit</v-icon>
           </a></v-btn>
           ssadegh(_at-]health.sdu.dk
         </div>
         <div>
-          <v-btn icon><a style="text-decoration: none" :href="'mailto:'+getDBMail()">
+          <v-btn icon variant="text"><a style="text-decoration: none" :href="'mailto:'+getDBMail()">
             <v-icon>mdi-email-edit</v-icon>
           </a></v-btn>
           david.b.blumenthal(_at-]fau.de
@@ -24,8 +24,8 @@
       <b style="font-size: 1.5rem">Web-Application</b>
       <div style="margin-top: 16px; margin-bottom: 32px">
         <div>
-          <v-btn icon><a style="text-decoration: none" :href="'mailto:'+getAMMail()">
-            <v-icon>fas fa-envelope</v-icon>
+          <v-btn icon variant="text"><a style="text-decoration: none" :href="'mailto:'+getAMMail()">
+            <v-icon>fa:fas fa-envelope</v-icon>
           </a></v-btn>
           andreas.maier-1(_at-]uni-hamburg.de
         </div>
