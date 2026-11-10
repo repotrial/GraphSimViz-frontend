@@ -157,10 +157,10 @@
                     </v-chip>
                   </v-row>
                   <v-row justify="center" style="margin-top: 64px">
-                    <v-select v-if="global_scores" variant="underlined" density="compact" @change="update_network()"
+                    <v-select v-if="global_scores" variant="underlined" density="compact" v-model="ged_variant" @update:model-value="update_network()"
                               :items="Object.values(Object.values(global_scores)[0]).map(k=>{return{text: map_names(k), value:k}})"
                               item-title="text"
-                              style="max-width: 250px" v-model="ged_variant">
+                              style="max-width: 250px">
                       <template v-slot:label>
                         <v-tooltip right>
                           <template v-slot:activator="{props}">
@@ -198,7 +198,7 @@
               <v-container style="padding-top: 16px">
                 <v-row justify="start" justify-lg="center">
                   <v-col class="flex_content_center">
-                    <v-radio-group v-model="networkType" @change="unsetConfig(2)" color="primary" density="compact"
+                    <v-radio-group v-model="networkType" @update:model-value="unsetConfig(2)" color="primary" density="compact"
                                    style="margin-top: 0; padding-top: 0">
                       <v-radio v-for="t of networkTypes" :key="'nw_'+t.value" :label="t.text" :value="t.value">
                       </v-radio>
@@ -232,7 +232,7 @@
               <v-container style="padding-top: 16px">
                 <v-row justify="center" justify-lg="start">
                   <v-col cols="12" md="5" lg="5" class="flex_content_center">
-                    <v-radio-group v-model="network1" @change="unsetConfig(3)" color="primary" density="compact"
+                    <v-radio-group v-model="network1" @update:model-value="unsetConfig(3)" color="primary" density="compact"
                                    style="margin-top: 0; padding-top: 0">
                       <v-radio
                           v-for="t of networks[networkType].filter(e=> networks[networkType].length >2 || (network2 == null || e.value !== network2))"
@@ -258,7 +258,7 @@
                     <v-divider vertical></v-divider>
                   </v-col>
                   <v-col cols="12" md="5" lg="5" class="flex_content_center">
-                    <v-radio-group v-model="network2" @change="unsetConfig(3)" color="primary" density="compact"
+                    <v-radio-group v-model="network2" @update:model-value="unsetConfig(3)" color="primary" density="compact"
                                    style="margin-top: 0; padding-top: 0">
                       <v-radio
                           v-for="t of networks[networkType].filter(e=> networks[networkType].length >2 || (network1 == null || e.value !== network1))"
@@ -302,7 +302,7 @@
                             variant="underlined"
                             :items="(network1 && network2 && (network1.indexOf('comorbidity') > -1 || network2.indexOf('comorbidity')> -1))? [{value: 'ICD10', text: 'ICD10'}] : network_ids[networkType]"
                             item-title="text"
-                            v-model="network_id" @change="unsetConfig(4)"
+                            v-model="network_id" @update:model-value="unsetConfig(4)"
                             style="max-width: 210px; min-width: 210px" density="compact" hide-details
                             :disabled="networkType ==='drugome'"
                         >
